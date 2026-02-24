@@ -20,10 +20,11 @@
 
   let reset-at(..args, level: 0) = {
     let counter = args.pos()
-    if counter.len() > level + 1 {
-      counter.at(level + 1) = 0
+    // reset the counter at the provided level
+    if counter.len() > level {
+      counter.at(level) = 0
     }
-    return counter
+    counter
   }
 
   if number == none {
@@ -32,7 +33,7 @@
   } else {
     // since the counter is not stepped,
     // prevent subexample numbering from being continued from the previous example
-    example-count.update(reset-at.with(level: level))
+    example-count.update(reset-at.with(level: level + 1))
   }
 
   context {
