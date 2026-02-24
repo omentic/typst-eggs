@@ -76,15 +76,13 @@
       show enum: it => context {
         if auto-sub(auto-subexamples, config.auto-subexamples) {
           for item in it.children {
-            {
-              build-example(
-                item.body,
-                level: 1,
-                parent-label: label,
-                config: config.sub,
-                auto-glosses: auto-sub(auto-glosses, config.auto-glosses)
-              )
-            }
+            build-example(
+              item.body,
+              level: 1,
+              parent-label: label,
+              config: config.sub,
+              auto-glosses: auto-sub(auto-glosses, config.auto-glosses)
+            )
           }
         } else {
           it
@@ -93,9 +91,7 @@
       // turn -'s into glosses
       show list: it => {
         if auto-sub(auto-glosses, config.auto-glosses) {
-          gloss(example-number: example-number,
-            ..it.children.map(it => it.body),
-         )
+          gloss(..it.children.map(it => it.body))
         } else {
           it
         }
@@ -117,7 +113,7 @@
     [
       #figure(
         kind: config.figure-kind,
-        numbering: it => [#example-count.display(config.ref-pattern)],
+        numbering: _ => example-count.display(config.ref-pattern),
         supplement: config.label-supplement,
         outlined: false,
         grid(
@@ -126,9 +122,8 @@
           example-number,
           grid.cell(content, breakable: config.breakable),
         )
-      ) #if label != none {label}
+      ) #label
     ]
-    // [#repr(label)]
   }
 }
 
