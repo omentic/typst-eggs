@@ -16,6 +16,7 @@
   auto-judges: auto,
 ) = {
   assert(config != none, message: "`show: eggs` must be used before `example`")
+  let example-count = counter(config.counter-name)
 
   let reset-at(..args, level: 0) = {
     let counter = args.pos()
@@ -27,15 +28,14 @@
 
   if number == none {
     // increment only if no custom number is sent
-    counter(config.counter-name).step(level: level + 1)
+    example-count.step(level: level + 1)
   } else {
     // since the counter is not stepped,
     // prevent subexample numbering from being continued from the previous example
-    counter(config.counter-name).update(reset-at.with(level: level))
+    example-count.update(reset-at.with(level: level))
   }
 
   context {
-    let example-count = counter(config.counter-name)
     let label = label
     if label == none {
       label = get-ex-label(content)
