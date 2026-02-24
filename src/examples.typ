@@ -44,12 +44,12 @@
       label = std.label(str(parent-label) + ":" + (numbering("a", example-count.get().at(level))))
     }
 
-    let example-number
+    let number = number
     if number != none {
       // if custom number is sent, override example number and don't increment
-      example-number = numbering(config.num-pattern, number)
+      number = numbering(config.num-pattern, number)
     } else {
-      example-number = numbering(config.num-pattern, example-count.get().at(level))
+      number = numbering(config.num-pattern, example-count.get().at(level))
     }
 
     // override auto centering in figures
@@ -123,7 +123,7 @@
         grid(
           columns: (config.indent, config.body-indent, 1fr),
           [],
-          example-number,
+          number,
           grid.cell(content, breakable: config.breakable),
         )
       ) #label
