@@ -53,43 +53,6 @@
 }
 
 
-#let ex-ref = e.element.declare(
-  "ex-ref",
-  prefix: prefix,
-  doc: "An example reference in parentheses. Accepts labels and integers for relative references. Automatically handles plural references such as (1-3) and (1a-c).",
-
-  fields: (
-    e.field("first", e.types.union(int, label, example, subexample), required: true),
-    e.field("second", e.types.option(e.types.union(int, label, example, subexample))),
-    e.field("left", content, doc: "Text on the left, e.g. \"e.g. \"."),
-    e.field("right", content, doc: "Text on the right, e.g. \" etc.\"."),
-
-    e.field("ref-pattern", str, default: "1a", doc: "Format for relative references. A 2-level numbering pattern."),
-  ),
-  
-  parse-args: (default-parser, fields: none, typecheck: none) => (args, include-required: false) => {
-    if args.pos().len() > 2 or args.pos().len() < 0 {
-      return (false, "ex-ref takes from 1 to 2 positional arguments.")
-    }
-
-    let args = if include-required {
-      arguments(args.pos().at(0), second: args.pos().at(1, default: none), ..args.named())
-    } else if args.pos() == () {
-      args
-    } else {
-      return (false, "element 'sunk': unexpected positional arguments\n  hint: these can only be passed to the constructor")
-    }
-
-    default-parser(args, include-required: include-required)
-  },
-
-  display: it => [
-    
-  ]
-
-)
-
-
 /// Typesets an example reference in parentheses.
 /// - ..args (label | int):
 ///   One to two arguments.
