@@ -449,6 +449,23 @@ A more sophisticated function can include splitting the content automatically an
   ```
 )
 
+== Pad space under brackets in glosses
+
+A common problem is that when typesetting glosses, you need to put brackets next to the following word with no tabulation between them, but align the other line with the word, not the bracket.
+
+While `judge` can help, it affets the effective spacing between words. The clean way to do that is to add a hidden printed bracket with the built-in #link("https://typst.app/docs/reference/layout/hide/")[hide].
+
+#code-ex(
+  ```typst
+
+    #let hb() = hide[\[]
+    #example[
+      - Cet   exemple  a    [un      DP].
+      - This  example  has  #hb()a  DP
+    ]
+  ```
+)
+
 == Number examples by chapter
 
 Package #link("https://typst.app/universe/package/headcount")[headcount] provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
@@ -492,6 +509,7 @@ Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with
     ```
   )
 }
+
 
 #show link: it => it.body
 = Complete function documentation <funcs>
