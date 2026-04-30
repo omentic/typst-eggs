@@ -449,22 +449,24 @@ A more sophisticated function can include splitting the content automatically an
   ```
 )
 
-== Pad space under brackets in glosses
+== Hide elements and/or pad words with spacing in glosses
 
-A common problem is that when typesetting glosses, you need to put brackets next to the following word with no tabulation between them, but align the other line with the word, not the bracket.
+When typesetting glosses, a common desire can be to put ex. brackets next to the following word with no tabulation between them, but align the other line with the _word_, not the bracket.
 
-While `judge` can help, it affets the effective spacing between words. The clean way to do that is to add a hidden printed bracket with the built-in #link("https://typst.app/docs/reference/layout/hide/")[hide].
+A clean way to accomplish this is to add hidden text with Typst's built-in #link("https://typst.app/docs/reference/layout/hide/")[hide]. This is similar to what LaTeX packages like `expex` accomplish with `\nogloss` and similar, except it must go on subsequent lines of the gloss, rather than the initial line.
 
 #code-ex(
   ```typst
-
-    #let hb() = hide[\[]
-    #example[
-      - Cet   exemple  a    [un      DP].
-      - This  example  has  #hb()a  DP
-    ]
+  #let h = hide
+  #let i = text.with(style: "italic")
+  #example[
+    - Fa'nu'i  yu'  ni      [[#i[O]    t#i[in]aitai-mu         #i[t]]    na  lepblu].
+    - show     me   Obl  #h[\[\[]Op    #i[WH];[obj].read-agr  #h[#i[t]]  L   book#h[\].]
+  ]
   ```
 )
+
+The #link("https://typst.app/docs/reference/text/raw/")[raw text] and #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] functions can also be used for direct padding, when necessary.
 
 == Define aliases to prefixes/suffixes for compositional glossing
 
