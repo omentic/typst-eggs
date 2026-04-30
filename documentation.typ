@@ -24,6 +24,10 @@
     ]
 }
 
+#let nb = it => [
+  *N.B.* #it
+]
+
 #v(6em)
 #align(center, par(spacing: 1.5em, text(size: 3em)[Eggs]))
 #align(center, text(size: 1.2em)[Linguistic examples with minimalist syntax])
@@ -226,7 +230,7 @@ Again, a function `judge` is provided to typeset judges manually. Following spac
   ```
 )
 
-N.B.: Avoid using `judge` with strings that are already in `auto-judges`, as this can lead to superscript doubling.
+#nb[Avoid using `judge` with strings that are already in `auto-judges`, as this can lead to superscript doubling.]
 
 = Abbreviations
 
@@ -271,6 +275,8 @@ The list of currently used abbreviations is stored as a dictionary of the form `
   #print-abbreviations()
   ```
 )
+
+#nb[It's better if you not import all abbreviations into the global namespace, as in ```typst #import abbreviations: *```. There are much more of them then in the standard Leipzig, and some (like `top`) override Typst built-ins, which may lead to unexpected behavior. If you need a lot of abbreviations, use qualified import: do ```typst #import abbreviations as ab```, then refer to them as ```typst #ab.top```.]
 
 = Labels and refs
 
