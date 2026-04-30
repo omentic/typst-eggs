@@ -212,7 +212,7 @@
     e.field("breakable", bool, default: false, doc: "Whether the subexample figure is breakable."),
     
     e.field("num-pattern", e.types.union(str, function), default: "a.", doc: "Subexample number format."),
-    e.field("ref-pattern", str, default: "1a", doc: "Example reference format (without brackets). A 2-level numbering pattern."),
+    e.field("ref-pattern", e.types.union(str, function), default: "1a", doc: "Example reference format (without brackets). A 2-level numbering pattern."),
     e.field("second-sub-ref-pattern", str, default: "a", doc: "Format to reference the second argument of `ex-ref` if it is a subexample. A 1-level numbering pattern."),
     e.field("label-supplement", e.types.option(str), doc: "The subexample figure supplement used in references. Has no effect when `smart-ref` is `true`."),
 
@@ -370,7 +370,7 @@
     e.field("breakable", bool, default: false, doc: "Whether the example figure is breakable."),
 
     e.field("num-pattern", e.types.union(str, function), default: "(1)", doc: "Example number format."),
-    e.field("ref-pattern", str, default: "1a", doc: "Example reference format (without brackets). A 2-level numbering pattern."),
+    e.field("ref-pattern", e.types.union(str, function), default: "1a", doc: "Example reference format (without brackets). A 2-level numbering pattern."),
     e.field("label-supplement", e.types.option(str), default: none, doc: "The example figure supplement used in references. Has no effect when `smart-ref` is `true`."),
     e.field("smart-refs", bool, default: true, doc: "Whether to format `@`-references and `ref`-references to examples Adding parenthesis and parsing the supplement."),
 
