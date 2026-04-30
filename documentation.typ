@@ -11,18 +11,18 @@
 #show link: underline
 
 #let code-ex(contents, output: true) = {
-    set text(size: 0.9em)
-    block(stroke: 1pt + luma(140), inset: (left: 8pt, right: 8pt, top: 10pt, bottom: 12pt), width: 100%, breakable: false, radius: 5pt)[
-      #contents
-      #if output {[
-        #line(length: 100%, stroke: 1pt + luma(140))
-        #eval(
-          contents.text,
-          mode: "markup",
-          scope: (eggs: eggs, example: example, gloss: gloss, subexample: subexample, judge: judge, abbreviations: abbreviations, abbreviation: abbreviation, print-abbreviations: print-abbreviations, ex-label: ex-label, ex-ref: ex-ref)
-        )
-      ]}
-    ]
+  set text(size: 0.9em)
+  block(stroke: 1pt + luma(140), inset: (left: 8pt, right: 8pt, top: 10pt, bottom: 12pt), width: 100%, breakable: false, radius: 5pt)[
+    #contents
+    #if output {[
+      #line(length: 100%, stroke: 1pt + luma(140))
+      #eval(
+        contents.text,
+        mode: "markup",
+        scope: (eggs: eggs, example: example, gloss: gloss, subexample: subexample, judge: judge, abbreviations: abbreviations, abbreviation: abbreviation, print-abbreviations: print-abbreviations, ex-label: ex-label, ex-ref: ex-ref)
+      )
+    ]}
+  ]
 }
 
 #let nb = it => [
@@ -38,15 +38,15 @@
 #align(center, text(size: 1.2em)[https://github.com/retroflexivity/typst-eggs])
 #v(5em)
 
-Eggs is a Typst package for typesetting linguistic examples. Its aim is to provide a Typst analogue to LaTeX `gb4e`, `expex`, `linguex`, etc. Additionally, it ships with `leipzig`-style gloss abbreviations.
+Eggs is a Typst package for typesetting linguistic examples. Its aim is to provide a Typst analogue to LaTeX `gb4e`, `expex`, `linguex`, etc. Additionally, it ships with Leipzig-style gloss abbreviations.
 
-This is a documentation on Eggs. It begins with a review of features, then provides an extensive list of functions and their arguments.
+This is the documentation for Eggs. It begins with a review of features, then provides an extensive list of functions and their arguments.
 
 #pagebreak()
 
 = Initializing
 
-To use Eggs, first import it, and then set its config via a global show rule.
+To use Eggs, first import it, and then initialize its configuration via a global show rule.
 #footnote[
   This package follows Typst's tradition of not abbreviating function names too much. Naturally, to achieve more effortless (or TeX-like) experience, you can set some aliases on import, e.g.
 
@@ -70,7 +70,7 @@ This same function is used to configure Eggs' settings. See below.
 
 = Examples
 
-The primary fuction of Eggs is `example`. It acceps any `content` and typesets it as a single top-level linguistic example.
+The primary function of Eggs is `example`. It accepts any `content` and typesets it as a single top-level linguistic example.
 
 #code-ex(
   ```typst
@@ -167,7 +167,7 @@ A simple and common use case is to align subexamples horizontally using #link("h
 
 Bullet lists in examples (lines that begin with `- `) are automatically treated as gloss lines.
 
-For words to split, you need to ensure that there is a `space` element between them. The easiest way to do it is to separate words with *more than one* space. There are exceptions, so use `~` (non-breaking space) for spaces you don't want to be treated as separators.
+For words to split, you need to ensure that there is Typst's `space` element between them. An easy way to do it is to separate words with *more than one* space. There are exceptions, so use `~` (non-breaking space) for spaces you don't want to be treated as separators.
 
 Translations and preambles are written as lines below and above glosses, respectively.
 
@@ -183,7 +183,7 @@ Translations and preambles are written as lines below and above glosses, respect
   ```
 )
 
-Glosses can by typeset manually with `gloss`. It accepts either a content, which it splits automatically, or a list. Automatic bullet list conversion can be toggled off by setting ```typst auto-glosses: false``` in the config (see @customization). To suspend it for a single example, pass `auto-glosses: false` to the (sub)example directly.
+Glosses can by typeset manually with `gloss`. It accepts either a `content`, which it splits automatically, or a list. Automatic bullet list conversion can be toggled off by setting ```typst auto-glosses: false``` in the config (see @customization). To suspend it for a single example, pass `auto-glosses: false` to the (sub)example directly.
 
 #counter("eggsample").update(it => it - 1)
 #code-ex(
@@ -260,7 +260,7 @@ Custom abbreviations can be created by defining a new `abbreviation`.
 #code-ex(
   ```typst
   #let eto = abbreviation("eto", "an extremely polysemous expression")
-  
+
   Due to the polysemy _eto_ exhibits, I will gloss it simply as #eto.
   #example[
     - Eto   čto   za   primer?
@@ -352,7 +352,7 @@ There are several ways of customizing the package options. The primary one is se
   ```
 )
 
-To change Eggs' config temporarely, you can scope the show rule or simply pass the content to `eggs`. Passed parameters are applied on top of the old configuration, so the parameters you passed before that are not overriden are preserved.
+To change Eggs' config temporarily, you can scope the show rule or simply pass the content to `eggs`. Passed parameters are applied on top of the old configuration, so the parameters you passed before that are not overridden are preserved.
 
 #counter("eggsample").update(it => it - 2)
 
@@ -382,10 +382,10 @@ To override the configuration for a single example, you can pass the options to 
 
 #code-ex(
   ```typst
-The following example imitates Higgins' (1973) original layout.
-#example(indent: 2.5em, body-indent: 2.5em)[
-  #subexample(indent: -0.3em, body-indent: 1.7em)[What John also is is enviable.]
-]
+  The following example imitates Higgins' (1973) original layout.
+  #example(indent: 2.5em, body-indent: 2.5em)[
+    #subexample(indent: -0.3em, body-indent: 1.7em)[What John also is is enviable.]
+  ]
   ```
 )
 
@@ -393,59 +393,61 @@ Finally, since Eggs is powered by #link("https://typst.app/universe/package/elem
 
 = How-to's
 
-Eggs strives to stay simple, in the sense that it does not convolute the syntax with non-Typst constructs, and it does not add marginal functionality that is easy to implement on one's own. Below is a list of tips that might be useful for typesetting examples but are not Eggs' core functionality. You can insert the code at the beginning of your document or use it as inspiration.
+Eggs strives to stay simple, in the sense that it does not convolute the syntax with non-Typst constructs, and does not add marginal functionality that is easy to implement on one's own.
 
-== Align content between subexamples
+Below is a list of tips that might be useful for typesetting, but are not part of Eggs itself.
 
-Say you want to show phonological processes with arrows aligned. The easiest way is to draw a single-line grid inside every subexample. Define a function that draws a grid, then place it in every subexample.
+== Align arbitrary content between subexamples
+
+Say you want to show ex. phonological processes, with arrows aligned. An easy way is to define a function that draws a single-line grid, then place it in every subexample.
 
 #code-ex(
   ```typst
-    // provide some default width for the left column
-    #let phono-grid(ur, sr, ur-width: 4em) = grid(
-      columns: (ur-width, auto, auto),
-      gutter: 1em,
-      ur, $->$, sr
-    )
+  // provide some default width for the left column
+  #let phono-grid(ur, sr, ur-width: 4em) = grid(
+    columns: (ur-width, auto, auto),
+    gutter: 1em,
+    ur, $->$, sr
+  )
 
-    #example[
-      // override the width if UR doesn't fit
-      #let phono-grid = phono-grid.with(ur-width: 5em)
-      + #phono-grid([/mi-te-iru/], [[miteiru]])
-      + #phono-grid([/kiri-te-iru/], [[kitteiru]])
-    ]
+  #example[
+    // override the width if UR doesn't fit
+    #let phono-grid = phono-grid.with(ur-width: 5em)
+    + #phono-grid([/mi-te-iru/], [[miteiru]])
+    + #phono-grid([/kiri-te-iru/], [[kitteiru]])
+  ]
   ```
 )
 
-A more sophisticated function can include splitting the content automatically and measuring the width of an element. You can then use it as a subexample wrapper (see @subexamples). 
+A more sophisticated function can include splitting the content automatically and measuring the width of an element. You can then use it as a subexample wrapper (see @subexamples).
 
 #code-ex(
   ```typst
-    #import "@preview/elembic:1.1.1" as e
-    // accept a list of subexamples
-    #let phono-grid-wrapper(..args) = {
-      // get the first and the last children of every row, insert arrow in between
-      let lines-split = args.pos().map(it => {
-        // get the elembic element's body
-        let children = e.fields(it).body.children
-        (children.at(0), $->$, children.at(-1))
-      })
-      // align the first column by the widest UR
-      let ur-width = calc.max(..lines-split.map(it => measure(it.at(0)).width))
-      for line-split in lines-split {
-        // reassemble the subexample
-        subexample(grid(
-          columns: (ur-width, auto, auto),
-          gutter: 1em,
-          ..line-split
-        ))
-      }
+  #import "@preview/elembic:1.1.1" as e
+  // accept a list of subexamples
+  #let phono-grid-wrapper(..args) = {
+    // get the first and the last children of every row, insert arrow in between
+    let lines-split = args.pos().map(it => {
+      // get the elembic element's body
+      let children = e.fields(it).body.children
+      (children.at(0), $->$, children.at(-1))
+    })
+    // align the first column by the widest UR
+    let ur-width = calc.max(..lines-split.map(it => measure(it.at(0)).width))
+    for line-split in lines-split {
+      // reassemble the subexample
+      subexample(grid(
+        columns: (ur-width, auto, auto),
+        gutter: 1em,
+        ..line-split
+      ))
     }
+  }
 
-    #example(subexample-wrapper: phono-grid-wrapper)[
-      + #[/mi-te-iru/] #[[miteiru]]
-      + #[/kiri-te-iru/] #[[kitteiru]]
-    ]
+  #example(subexample-wrapper: phono-grid-wrapper)[
+    + #[/mi-te-iru/] #[[miteiru]]
+    + #[/kiri-te-iru/] #[[kitteiru]]
+  ]
   ```
 )
 
@@ -594,34 +596,33 @@ Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with
   counter(heading).update(0)
   code-ex(
     ```typst
-      #import "@preview/elembic:1.1.1" as e
-      #import "@preview/headcount:0.1.0": *
+    #import "@preview/elembic:1.1.1" as e
+    #import "@preview/headcount:0.1.0": *
 
-      // tweak the definition
-      #let dependent-numbering(style, levels: 1) = (..ns) => { numbering(style, ..normalize-length(counter(heading).get(), levels), ..ns.pos()) }
+    // tweak the definition
+    #let dependent-numbering(style, levels: 1) = (..ns) => { numbering(style, ..normalize-length(counter(heading).get(), levels), ..ns.pos()) }
 
-      #show: eggs.with(
-        smart-refs: false,
-        auto-labels: false,
-        // pass `level` if needed
-        num-pattern: dependent-numbering("(1.1)"),
-        ref-pattern: dependent-numbering("1.1a"),
-        body-indent: 3em,
-      )
-      #show heading: reset-counter(counter("eggsample"))
+    #show: eggs.with(
+      smart-refs: false,
+      auto-labels: false,
+      // pass `level` if needed
+      num-pattern: dependent-numbering("(1.1)"),
+      ref-pattern: dependent-numbering("1.1a"),
+      body-indent: 3em,
+    )
+    #show heading: reset-counter(counter("eggsample"))
 
-      = Suppose we have a chapter here
+    = Suppose we have a chapter here
 
-      #example[
-        and an example in the chapter #ex-label(<dep-counted>)
-      ]
+    #example[
+      and an example in the chapter #ex-label(<dep-counted>)
+    ]
 
-      We can refer to it like this #ex-ref(<dep-counted>) and like this #ex-ref(0).
+    We can refer to it like this #ex-ref(<dep-counted>) and like this #ex-ref(0).
 
-      = And another here
+    = And another here
 
-      We should refer to that example like this (@dep-counted).
-
+    We should refer to that example like this (@dep-counted).
     ```
   )
 }
