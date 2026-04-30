@@ -466,6 +466,52 @@ While `judge` can help, it affets the effective spacing between words. The clean
   ```
 )
 
+== Define aliases to prefixes/suffixes for compositional glossing
+
+Typst recognizes the `-` character as a valid _identifier_ in variable and function names: for example, `code-ex`.
+This makes it rather inconvenient to call zero-argument functions in glosses, as `-` is conventionally used by linguists for morpheme breaks.
+Every time a `-` follows a call to a function, it must be escaped with a `\`. This can lead to hard-to-read gloss code, if abbreviations are used.
+
+Alternatively, you can define _aliases_ to shared morphemes using Typst's functions.
+This has the advantage of also working with autocomplete in the web editor or with a language server.
+
+#code-ex(
+  ```typst
+  #import abbreviations: p3, an, dur, pl, pro
+  #let ai  = abbreviation("ai",  "animate intransitive")
+
+  #let ann    = [that]
+  #let iksi   = [-#p3#pl.#an]
+  #let ponoka = [elk]
+  #let a_dur  = [#dur\-]
+  #let otsi   = [swim.#ai]
+  #let yaawa  = [-#p3#pl=#pro]
+  #let ohkan  = [#smallcaps[all]-]
+
+  #example[
+    + - anníksi    ponokáíksi̥    áótsiyaaw̥ḁ.
+      - ann-iksi   ponoka-iksi   á-otsi-yi=aawa
+      - #ann#iksi  #ponoka#iksi  #a_dur#otsi#yaawa
+      'Those elk are swimming.' (elic. B > E)
+
+    + - anníksi    ponokáíksi̥    ótsiyaaw̥ḁ.
+      - ann-iksi   ponoka-iksi   ótsi-yi=aawa
+      - #ann#iksi  #ponoka#iksi  #otsi#yaawa
+      'Those elk swim.' (elic. B > E)
+  ]
+
+  #example[
+    + - anniksi    ponokáíksi̥    áóhkanotsiyaaw̥ḁ.
+      - ann-iksi   ponoka-iksi   á-ohkan-otsi-yi=aawa
+      - #ann#iksi  #ponoka#iksi  #a_dur#ohkan#otsi#yaawa
+      'Those elk are all swimming.'
+
+    + - \*anníksi  ponokáíksi̥  ohkanotsiyaaw̥ḁ.
+      Intended: 'Those elk all swim.'
+  ]
+  ```
+)
+
 == Number examples by chapter
 
 Package #link("https://typst.app/universe/package/headcount")[headcount] provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
