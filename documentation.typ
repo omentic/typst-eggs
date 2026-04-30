@@ -6,6 +6,7 @@
 
 #set heading(numbering: "1.")
 #show heading.where(level: 1): set block(above: 2em, below: 1em)
+#show heading.where(level: 2): set block(above: 1.7em, below: 1em)
 // #show: tidy.render-examples.with(scope: (example: example, gloss: gloss, subexample: subexample, judge: judge,))
 #show link: underline
 
@@ -115,7 +116,7 @@ By default, examples in each footnote are numbered separately. They also use the
   )
 ] demonstrates this.
 
-= Subexamples
+= Subexamples <subexamples>
 
 Numbered lists inside examples (lines that begin with `+ `) are automatically typeset as subexamples.
 
@@ -389,6 +390,108 @@ The following example imitates Higgins' (1973) original layout.
 )
 
 Finally, since Eggs is powered by #link("https://typst.app/universe/package/elembic")[Elembic], you may apply #link("https://pgbiel.github.io/elembic/elements/styling/set-rules.html")[its set rules] to the elements `example`, `subexample`, and `gloss`. #link("https://pgbiel.github.io/elembic/elements/styling/show-rules.html")[Elembic's show rules] can also be used to style example contents in an arbitrary way.
+
+= How-to's
+
+Eggs strives to stay simple, in the sense that it does not convolute the syntax with non-Typst constructs, and it does not add marginal functionality that is easy to implement on one's own. Below is a list of tips that might be useful for typesetting examples but are not Eggs' core functionality. You can insert the code at the beginning of your document or use it as inspiration.
+
+== Align content between subexamples
+
+Say you want to show phonological processes with arrows aligned. The easiest way is to draw a single-line grid inside every subexample. Define a function that draws a grid, then place it in every subexample.
+
+#code-ex(
+  ```typst
+    // provide some default width for the left column
+    #let phono-grid(ur, sr, ur-width: 4em) = grid(
+      columns: (ur-width, auto, auto),
+      gutter: 1em,
+      ur, $->$, sr
+    )
+
+    #example[
+      // override the width if UR doesn't fit
+      #let phono-grid = phono-grid.with(ur-width: 5em)
+      + #phono-grid([/mi-te-iru/], [[miteiru]])
+      + #phono-grid([/kiri-te-iru/], [[kitteiru]])
+    ]
+  ```
+)
+
+A more sophisticated function can include splitting the content automatically and measuring the width of an element. You can then use it as a subexample wrapper (see @subexamples). 
+
+#code-ex(
+  ```typst
+    #import "@preview/elembic:1.1.1" as e
+    // accept a list of subexamples
+    #let phono-grid-wrapper(..args) = {
+      // get the first and the last children of every row, insert arrow in between
+      let lines-split = args.pos().map(it => {
+        // get the elembic element's body
+        let children = e.fields(it).body.children
+        (children.at(0), $->$, children.at(-1))
+      })
+      // align the first column by the widest UR
+      let ur-width = calc.max(..lines-split.map(it => measure(it.at(0)).width))
+      for line-split in lines-split {
+        // reassemble the subexample
+        subexample(grid(
+          columns: (ur-width, auto, auto),
+          gutter: 1em,
+          ..line-split
+        ))
+      }
+    }
+
+    #example(subexample-wrapper: phono-grid-wrapper)[
+      + #[/mi-te-iru/] #[[miteiru]]
+      + #[/kiri-te-iru/] #[[kitteiru]]
+    ]
+  ```
+)
+
+== Number examples by chapter
+
+Package #link("https://typst.app/universe/package/headcount")[headcount] provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
+
+Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with cross-chapter references. This will probably be fixed when the next release of Elembic is dropped. For now, use \@-refs with `smart-refs` off.
+
+#{
+  show heading: set text(size: 0.8em)
+  show heading: set block(above: 1.4em)
+  counter(heading).update(0)
+  code-ex(
+    ```typst
+      #import "@preview/elembic:1.1.1" as e
+      #import "@preview/headcount:0.1.0": *
+
+      // tweak the definition
+      #let dependent-numbering(style, levels: 1) = (..ns) => { numbering(style, ..normalize-length(counter(heading).get(), levels), ..ns.pos()) }
+
+      #show: eggs.with(
+        smart-refs: false,
+        auto-labels: false,
+        // pass `level` if needed
+        num-pattern: dependent-numbering("(1.1)"),
+        ref-pattern: dependent-numbering("1.1a"),
+        body-indent: 3em,
+      )
+      #show heading: reset-counter(counter("eggsample"))
+
+      = Suppose we have a chapter here
+
+      #example[
+        and an example in the chapter #ex-label(<dep-counted>)
+      ]
+
+      We can refer to it like this #ex-ref(<dep-counted>) and like this #ex-ref(0).
+
+      = And another here
+
+      We should refer to that example like this (@dep-counted).
+
+    ```
+  )
+}
 
 #show link: it => it.body
 = Complete function documentation <funcs>
