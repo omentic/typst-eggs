@@ -554,6 +554,32 @@ As Eggs is built on Elembic, this can be accomplished by putting `show` rules wi
   ```
 )
 
+== Float attributions and other text right
+
+It can be desirable to attach _attributions_ to examples. Conventionally in glosses, these attributions take their place as right-aligned text, on the same line of the rest of the gloss.
+
+Typst's #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] function along with its #link("https://typst.app/docs/reference/layout/fraction/")[fractional type] makes this easy for short content.
+
+#code-ex(
+  ```typst
+  #import abbreviations: p3, an, dur, pl, pro
+  #let ai = abbreviation("ai",  "animate intransitive")
+  #example[
+    + - anníksi          ponokáíksi̥       #highlight[áótsiyaaw̥ḁ].
+      - ann-iksi         ponoka-iksi      á-otsi-yi=aawa
+      - that-#p3#pl.#an  elk\-#p3#pl.#an  #dur\-swim.#ai\-#p3#pl=#pro
+      'Those elk are swimming.' (elic. B > E) #h(1fr) via UBC's Field Methods II (2025w2)
+
+    + - anníksi          ponokáíksi̥       #highlight[ótsiyaaw̥ḁ].
+      - ann-iksi         ponoka-iksi      ótsi-yi=aawa
+      - that-#p3#pl.#an  elk\-#p3#pl.#an  swim.#ai\-#p3#pl=#pro
+      'Those elk swim.' (elic. B > E) #h(1fr) via UBC's Field Methods II (2025w2)
+  ]
+  ```
+)
+
+Note that this method only works on non-aligned gloss lines.
+
 == Number examples by chapter
 
 Package #link("https://typst.app/universe/package/headcount")[headcount] provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
