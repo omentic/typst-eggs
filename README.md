@@ -1,6 +1,6 @@
-# Typeset linguistic examples with the Simplest Syntax possible
+# typst-eggs: typeset linguistic examples with minimal syntax
 
-This is a [Typst](https://github.com/typst/typst) package that provides linguistic examples and interlinear glossing. It is a heavily modified fork of [neunenak's typst-leipzig-glossing](https://github.com/neunenak/typst-leipzig-glossing).
+**Eggs** is a [Typst](https://github.com/typst/typst) package that provides linguistic examples and interlinear glossing with a minimalist list-based syntax. It is a heavily modified fork of [neunenak's typst-leipzig-glossing](https://github.com/neunenak/typst-leipzig-glossing).
 
 See it on [Typst Universe](https://typst.app/universe/package/eggs).
 
@@ -24,9 +24,11 @@ Below is an example of how to typeset an example.
 
 <img src="assets/example.svg" alt="an example with subexamples and glosses" width="450"/>
 
-### Basic
+A full guide to Eggs can be found in [documentation.pdf](documentation.pdf). Some of the more useful functionality is briefly discussed below.
 
-Start with applying the global show rule. The central function is `example`, which typesets an example. Inside it, numbered lists are treated as subexamples, and bullet lists — as glosses. Separate words in glosses with **two or more** spaces.
+### Basics
+
+Start with applying the global show rule. The central function is `example`, which typesets an example. Inside it, auto-numbered lists (`+`) are treated as subexamples, and bullet lists (`-`) as gloss environments. **Words in glosses must be separated by two or more spaces**.
 
 This automatic conversion can be toggled off by passing `auto-subexamples: false` and `auto-glosses: false` to `example`, like this:
 
@@ -37,7 +39,11 @@ This automatic conversion can be toggled off by passing `auto-subexamples: false
 ]
 ```
 
-Additionally, `subexample` typesets a subexample and `gloss` typesets glosses.
+Additionally, `subexample` explicitly typesets a subexample and `gloss` explicitly typesets glosses.
+
+### Numbering
+
+Examples are numbered automatically by a global counter, `counter("eggsample")`. Individual exceptions to the numbering can be made by passing a `number: 123` argument to `example` or `subexample`. The global counter can be inspected and modified as all counters are -- ex. like `counter("eggsample").update(n)`.
 
 ### Labels and refs
 
@@ -58,9 +64,7 @@ Common judges are recognized automatically. `judge` typesets text without taking
 
 The `abbreviations` submodule provides `leipzig`-style abbreviation commands. They are kept track of and can be printed with `print-abbreviations`.
 
-Customization is done via the global show rule: `#show eggs.with()`.
-
-See [documentation.pdf](documentation.pdf) for more info.
+Customization can be done via the global show rule: `#show eggs.with(...)`.
 
 <!-- exclude -->
 ## Installing locally
