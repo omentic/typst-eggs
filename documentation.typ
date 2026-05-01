@@ -40,11 +40,11 @@
 
 Eggs is a Typst package for typesetting linguistic examples. Its aim is to provide a Typst analogue to LaTeX `gb4e`, `expex`, `linguex`, etc. Additionally, it ships with Leipzig-style gloss abbreviations.
 
-This is the documentation for Eggs. It begins with a review of features, then provides an extensive list of functions and their arguments.
+This is the documentation for Eggs. It begins with a review of features, then discusses some useful tips & tricks, then finally provides an extensive list of functions and their arguments.
 
 #pagebreak()
 
-= Initializing
+= Initialization
 
 To use Eggs, first import it, and then initialize its configuration via a global show rule.
 #footnote[
@@ -66,7 +66,7 @@ To use Eggs, first import it, and then initialize its configuration via a global
   output: false
 )
 
-This same function is used to configure Eggs' settings. See below.
+This same function is used to configure Eggs' settings. See @customization.
 
 = Examples
 
@@ -82,11 +82,11 @@ The primary function of Eggs is `example`. It accepts any `content` and typesets
   ```
 )
 
-Examples are automatically numbered continuously. To override automatic numbering, pass the `number` argument. Examples with a custom number do not increment the counter, so numbering continues where it was left off.
+Examples are automatically numbered continuously, using a #link("https://typst.app/docs/reference/introspection/counter/")[counter]. To override automatic numbering, the `number` argument can be passed. Examples with a custom number do not increment the counter, so numbering continues where it was left off.
 #code-ex(
 
   ```typst
-  The idea of Predicate Inversion stems from the seeming parallelism of the following sentences.
+  The idea of Predicate Inversion stems from the seeming parallelism of the following.
   #example[
     `example` is the primary function of Eggs.
   ]
@@ -96,9 +96,7 @@ Examples are automatically numbered continuously. To override automatic numberin
   ```
 )
 
-#pagebreak()
-
-The counter can also be set to an absolute value with ```typst #counter("eggsample").update(n)``` or a relative one with ```typst #counter("eggsample").update(it => it + n)```. Following examples will be numbered starting with the next number. See #link("https://typst.app/docs/reference/introspection/counter/")[counter] for more info.
+The counter can also be set to an absolute value with ```typst #counter("eggsample").update(n)``` or a relative one with ```typst #counter("eggsample").update(it => it + n)```. Within an example, the subexample counter can be set by using an array, as in ```typst #counter("eggsample").update((n, m)) ```. Following examples will be numbered starting with the next number.
 
 By default, examples in each footnote are numbered separately. They also use their own formatting. The following footnote#footnote[
   Examples in footnotes use a separate counter, `fn-eggsample`, which is set to 0 at the beginning of each footnote.
@@ -118,11 +116,11 @@ By default, examples in each footnote are numbered separately. They also use the
 
 = Subexamples <subexamples>
 
-Numbered lists inside examples (lines that begin with `+ `) are automatically typeset as subexamples.
+Numbered lists inside examples (lines that begin with `+`) are automatically typeset as subexamples.
 
 #code-ex(
   ```typst
-  Compare the following two sentences, of which only the former exhibits the Definiteness Effect.
+  Compare the following sentences, of which only the former exhibits the Definiteness Effect.
   #example[
     + There is a/\*the subexample.
     + Here is a/the subexample.
@@ -130,15 +128,20 @@ Numbered lists inside examples (lines that begin with `+ `) are automatically ty
   ```
 )
 
-In case you prefer it manual, the function `subexample` is defined. It is intended to only be used inside `example`. Automatic conversion of numbered lists can be toggled off by setting ```typst auto-subexamples: false``` in the config (see @customization). To suspend it for a single example, pass ```typst auto-subexamples: false``` to the example directly.
+In case you prefer it manual, the function `subexample` is defined. It is intended to only be used inside `example`. The `subexample` form also can take a `number` argument for manual numbering.
+
+Automatic conversion of numbered lists can be toggled off by setting ```typst auto-subexamples: false``` in the config (see @customization).
+
+To suspend it for a single example, pass ```typst auto-subexamples: false``` to the example directly.
 
 #counter("eggsample").update((..it) => it.at(0) - 1)
 #code-ex(
   ```typst
-  Compare the following two sentences, of which only the former exhibits the Definiteness Effect.
+  Compare the following sentences, of which only the former exhibits the Definiteness Effect.
   #example(auto-subexamples: false)[
     #subexample[There is a/\*the subexample.]
     #subexample[Here is a/the subexample.]
+    + Now, numbered lists function as numbered lists.
   ]
   ```
 )
@@ -147,7 +150,7 @@ In case you prefer it manual, the function `subexample` is defined. It is intend
 
 By default, automatic subexamples are simply placed one after another. This can be changed by passing or setting `subexample-wrapper`. A wrapper is a function that accepts any number of `content` elements and returns `content` constructed from them.
 
-A simple and common use case is to align subexamples horizontally using #link("https:typst.app/docs/reference/layout/grid")[a grid].
+A simple and common use case is to align subexamples horizontally using a #link("https:typst.app/docs/reference/layout/grid")[grid].
 
 #code-ex(
   ```typst
@@ -165,11 +168,11 @@ A simple and common use case is to align subexamples horizontally using #link("h
 
 = Glosses <glosses>
 
-Bullet lists in examples (lines that begin with `- `) are automatically treated as gloss lines.
+Bullet lists in examples (lines that begin with `-`) are automatically treated as gloss lines.
 
-For words to split, you need to ensure that there is Typst's `space` element between them. An easy way to do it is to separate words with *more than one* space. There are exceptions, so use `~` (non-breaking space) for spaces you don't want to be treated as separators.
+For words to split, you need to ensure that there is Typst's special `space` element between them. A consistent way to do this is to *separate words with more than one space*. There are exceptions, particularly when function calls are involved, so use `~` (non-breaking space) for spaces you _don't_ want to be treated as separators.
 
-Translations and preambles are written as lines below and above glosses, respectively.
+Translations and preambles are written as lines below and above gloss environments, respectively.
 
 #code-ex(
   ```typst
@@ -183,7 +186,9 @@ Translations and preambles are written as lines below and above glosses, respect
   ```
 )
 
-Glosses can by typeset manually with `gloss`. It accepts either a `content`, which it splits automatically, or a list. Automatic bullet list conversion can be toggled off by setting ```typst auto-glosses: false``` in the config (see @customization). To suspend it for a single example, pass `auto-glosses: false` to the (sub)example directly.
+Glosses can by typeset manually with `gloss`, which either accepts a `content` (which it splits automatically), or a list. Automatic bullet list conversion can be toggled off by setting ```typst auto-glosses: false``` in the config (see @customization).
+
+To suspend it for a single example, pass `auto-glosses: false` to the (sub)example directly.
 
 #counter("eggsample").update(it => it - 1)
 #code-ex(
@@ -196,6 +201,7 @@ Glosses can by typeset manually with `gloss`. It accepts either a `content`, whi
       ([eggs], [this], [tasty]),
     )
     'Eggs are tasty.'
+    - Now, bullet lists function as bullet lists.
   ]
   ```
 )
@@ -225,7 +231,7 @@ Again, a function `judge` is provided to typeset judges manually. Following spac
   ```typst
   The following pair shows the information-structural rigidity of specificational sentences.
   #example(auto-judges: ())[
-    + #judge(super[OK])SMITH is the killer.
+    + #judge(super[OK]) SMITH is the killer.
     + #judge[\*]THE KILLER is Smith.
   ]
   ```
@@ -255,6 +261,7 @@ All abbreviations are in lowercase. All abbreviations' names are as they appear,
   ```
 )
 
+#pagebreak()
 Custom abbreviations can be created by defining a new `abbreviation`.
 
 #code-ex(
@@ -308,9 +315,7 @@ References to examples are automatically enclosed in parentheses. Citing two exa
   ```
 )
 
-A dedicated function, `ex-ref`, is also provided. It accepts references and additionally allows
-- sending integers for relative numbering, with `0` referring to the last example, `1` to the next, etc.
-- supplementing content to appear in the parenthesis before and after example numbers.
+A dedicated function, `ex-ref`, is also provided. It accepts references and additionally allows sending integers for relative numbering, with `0` referring to the last example, `1` to the next, etc; and supplementing content to appear in the parenthesis before and after example numbers.
 
 #code-ex(
   ```typst
@@ -329,7 +334,7 @@ A dedicated function, `ex-ref`, is also provided. It accepts references and addi
 
 Eggs offers some layout and styling customization and several behaviour options. The complete list is given in @funcs.
 
-There are several ways of customizing the package options. The primary one is setting the parameters of `eggs` in a global show rule.
+The main way of customizing package options is by setting Eggs' parameters in a global show rule.
 
 #code-ex(
   ```typst
@@ -352,7 +357,7 @@ There are several ways of customizing the package options. The primary one is se
   ```
 )
 
-To change Eggs' config temporarily, you can scope the show rule or simply pass the content to `eggs`. Passed parameters are applied on top of the old configuration, so the parameters you passed before that are not overridden are preserved.
+To change Eggs' config only temporarily, you can scope the show rule or simply pass the configuration to `eggs` directly. Passed parameters are applied on top of the old configuration, so any parameters set earlier that are not overridden are preserved.
 
 #counter("eggsample").update(it => it - 2)
 
@@ -376,7 +381,7 @@ To change Eggs' config temporarily, you can scope the show rule or simply pass t
   ```
 )
 
-To override the configuration for a single example, you can pass the options to it directly. However, note that options are split among Eggs' functions: if you want to customize subexample or gloss options, you have to pass those to the functions directly (without prepending `sub-` or `gloss-`).
+To override the configuration for a single example, you can also pass the options to it directly. However, note that options are split among Eggs' functions: if you want to customize subexample or gloss options, you have to pass those to the functions directly (without prepending `sub-` or `gloss-`).
 
 #counter("eggsample").update(it => it - 2)
 
@@ -391,19 +396,19 @@ To override the configuration for a single example, you can pass the options to 
 
 Finally, since Eggs is powered by #link("https://typst.app/universe/package/elembic")[Elembic], you may apply #link("https://pgbiel.github.io/elembic/elements/styling/set-rules.html")[its set rules] to the elements `example`, `subexample`, and `gloss`. #link("https://pgbiel.github.io/elembic/elements/styling/show-rules.html")[Elembic's show rules] can also be used to style example contents in an arbitrary way.
 
-= How-to's
+= Tips and Tricks
 
 Eggs strives to stay simple, in the sense that it does not convolute the syntax with non-Typst constructs, and does not add marginal functionality that is easy to implement on one's own.
 
 Below is a list of tips that might be useful for typesetting, but are not part of Eggs itself.
 
+#pagebreak()
 == Align arbitrary content between subexamples
 
 Say you want to show ex. phonological processes, with arrows aligned. An easy way is to define a function that draws a single-line grid, then place it in every subexample.
 
 #code-ex(
   ```typst
-  // provide some default width for the left column
   #let phono-grid(ur, sr, ur-width: 4em) = grid(
     columns: (ur-width, auto, auto),
     gutter: 1em,
@@ -411,7 +416,6 @@ Say you want to show ex. phonological processes, with arrows aligned. An easy wa
   )
 
   #example[
-    // override the width if UR doesn't fit
     #let phono-grid = phono-grid.with(ur-width: 5em)
     + #phono-grid([/mi-te-iru/], [[miteiru]])
     + #phono-grid([/kiri-te-iru/], [[kitteiru]])
@@ -424,18 +428,13 @@ A more sophisticated function can include splitting the content automatically an
 #code-ex(
   ```typst
   #import "@preview/elembic:1.1.1" as e
-  // accept a list of subexamples
   #let phono-grid-wrapper(..args) = {
-    // get the first and the last children of every row, insert arrow in between
     let lines-split = args.pos().map(it => {
-      // get the elembic element's body
       let children = e.fields(it).body.children
       (children.at(0), $->$, children.at(-1))
     })
-    // align the first column by the widest UR
     let ur-width = calc.max(..lines-split.map(it => measure(it.at(0)).width))
     for line-split in lines-split {
-      // reassemble the subexample
       subexample(grid(
         columns: (ur-width, auto, auto),
         gutter: 1em,
@@ -451,6 +450,7 @@ A more sophisticated function can include splitting the content automatically an
   ```
 )
 
+#pagebreak()
 == Hide elements and/or pad words with spacing in glosses
 
 When typesetting glosses, a common desire can be to put ex. brackets next to the following word with no tabulation between them, but align the other line with the _word_, not the bracket.
@@ -470,6 +470,7 @@ A clean way to accomplish this is to add hidden text with Typst's built-in #link
 
 The #link("https://typst.app/docs/reference/text/raw/")[raw text] and #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] functions can also be used for direct padding, when necessary.
 
+#pagebreak()
 == Define aliases to prefixes/suffixes for compositional glossing
 
 Typst recognizes the `-` character as a valid _identifier_ in variable and function names: for example, `code-ex`.
@@ -516,6 +517,7 @@ This has the advantage of also working with autocomplete in the web editor or wi
   ```
 )
 
+#pagebreak()
 == Add line notes within example blocks with term lists
 
 As Eggs overrides auto-numbered lists (`+`) and bulleted lists (`-`) for use as subexamples and alignment environments, respectively, they are not available for use within the body of an `example` (without disabling `auto-subexamples` and `auto-glosses`). This can make it difficult to write down notes during and about elicitation sessions -- to have text notes broken onto multiple lines, lines either must end with `\`, or have an extra newline separating them.
@@ -558,6 +560,7 @@ As Eggs is built on Elembic, this can be accomplished by putting `show` rules wi
   ```
 )
 
+#pagebreak()
 == Float attributions and other text right
 
 It can be desirable to attach _attributions_ to examples. Conventionally in glosses, these attributions take their place as right-aligned text, on the same line of the rest of the gloss.
@@ -584,11 +587,12 @@ Typst's #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] 
 
 Note that this method only works on non-aligned gloss lines.
 
+#pagebreak()
 == Number examples by chapter
 
-Package #link("https://typst.app/universe/package/headcount")[headcount] provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
+The #link("https://typst.app/universe/package/headcount")[headcount] package provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
 
-Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with cross-chapter references. This will probably be fixed when the next release of Elembic is dropped. For now, use \@-refs with `smart-refs` off.
+Unfortunately, using `ex-ref` (and smart refs) with headcount is currently broken with cross-chapter references. This will probably be fixed when the next release of Elembic is dropped. For now, use \@-refs with `smart-refs` off.
 
 #context {
   show heading: set text(size: 0.8em)
@@ -602,7 +606,9 @@ Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with
     #import "@preview/headcount:0.1.0": *
 
     // tweak the definition
-    #let dependent-numbering(style, levels: 1) = (..ns) => { numbering(style, ..normalize-length(counter(heading).get(), levels), ..ns.pos()) }
+    #let dependent-numbering(style, levels: 1) = (..ns) => {
+      numbering(style, ..normalize-length(counter(heading).get(), levels), ..ns.pos())
+    }
 
     #show: eggs.with(
       smart-refs: false,
@@ -630,8 +636,7 @@ Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with
   counter(heading).update(heading-state)
 }
 
-
-#show link: it => it.body
+#pagebreak()
 = Complete function documentation <funcs>
 
 #set heading(numbering: none)
@@ -646,6 +651,8 @@ Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with
   it
 }
 #set list(spacing: 1.5em, marker: rotate(90deg, "🥚"))
+
+#show link: it => it.body
 
 #show regex("^[a-z\-.]+\s\((\w+(\s\|\s)?)+\)"): it => {
   set text(font: "DejaVu Sans Mono", size: 0.8em)
