@@ -590,9 +590,11 @@ Package #link("https://typst.app/universe/package/headcount")[headcount] provide
 
 Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with cross-chapter references. This will probably be fixed when the next release of Elembic is dropped. For now, use \@-refs with `smart-refs` off.
 
-#{
+#context {
   show heading: set text(size: 0.8em)
   show heading: set block(above: 1.4em)
+  set heading(outlined: false)
+  let heading-state = counter(heading).get()
   counter(heading).update(0)
   code-ex(
     ```typst
@@ -625,6 +627,7 @@ Unfortunately, `ex-ref` (and smart refs) with headcount is currently broken with
     We should refer to that example like this (@dep-counted).
     ```
   )
+  counter(heading).update(heading-state)
 }
 
 
