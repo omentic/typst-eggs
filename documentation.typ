@@ -512,6 +512,48 @@ This has the advantage of also working with autocomplete in the web editor or wi
   ```
 )
 
+== Add line notes within example blocks with term lists
+
+As Eggs overrides auto-numbered lists (`+`) and bulleted lists (`-`) for use as subexamples and alignment environments, respectively, they are not available for use within the body of an `example` (without disabling `auto-subexamples` and `auto-glosses`). This can make it difficult to write down notes during and about elicitation sessions -- to have text notes broken onto multiple lines, lines either must end with `\`, or have an extra newline separating them.
+
+However, Eggs does not touch #link("https://typst.app/docs/reference/model/terms/")[term lists] -- lists of the form ```typst / term: description```. These are quite useful for jotting down notes -- particularly if the common convention of prefixing notes with the linguist/consultant's _initials_ is adopted.
+
+The exact style of term lists can also be modified for within `example` blocks by `show` rules.
+As Eggs is built on Elembic, this can be accomplished by putting `show` rules within a call to Elembic's `show_`:
+
+#code-ex(
+  ```typst
+  #import abbreviations: p3, an, dur, pl, pro
+  #let ai = abbreviation("ai",  "animate intransitive")
+
+  #import "@preview/elembic:1.1.1" as e
+  #show: e.show_(example, it => {
+    show terms: set terms(indent: 0em, hanging-indent: 0.5em, spacing: 0.5em,
+      separator: [: ])
+    show terms: set block(above: 1em)
+    show terms: set text(size: 0.95em)
+    show terms: set strong(delta: 0)
+    it
+  })
+
+  #example[
+    + - anníksi          ponokáíksi̥       #highlight[áótsiyaaw̥ḁ].
+      - ann-iksi         ponoka-iksi      á-otsi-yi=aawa
+      - that-#p3#pl.#an  elk\-#p3#pl.#an  #dur\-swim.#ai\-#p3#pl=#pro
+      'Those elk are swimming.' (elic. B > E)
+
+    + - anníksi          ponokáíksi̥       #highlight[ótsiyaaw̥ḁ].
+      - ann-iksi         ponoka-iksi      ótsi-yi=aawa
+      - that-#p3#pl.#an  elk\-#p3#pl.#an  swim.#ai\-#p3#pl=#pro
+      'Those elk swim.' (elic. B > E)
+
+      / EY: When you talk about swimming, _á-_ is like "being in the moment of"
+      / EY: The difference here between "swimming" vs. "swim"
+      / EY: 'Those elk swim' is a statement of fact... doesn't imply any particular time
+  ]
+  ```
+)
+
 == Number examples by chapter
 
 Package #link("https://typst.app/universe/package/headcount")[headcount] provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
