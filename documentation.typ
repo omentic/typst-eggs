@@ -277,8 +277,6 @@ The list of currently used abbreviations is stored as a dictionary of the form `
   ```
 )
 
-#nb[It's better if you not import all abbreviations into the global namespace, as in ```typst #import abbreviations: *```. There are much more of them then in the standard Leipzig, and some (like `top`) override Typst built-ins, which may lead to unexpected behavior. If you need a lot of abbreviations, use qualified import: do ```typst #import abbreviations as ab```, then refer to them as ```typst #ab.top```.]
-
 = Labels and refs
 
 There are two ways of labelling an example (or a subexample). The first is passing the `label` argument to `example` (or `subexample`). The second is placing an `ex-label` anywhere in the body of the example (or a subexample), preferably at the beginning or at the end. Typst's built-in `label` does not work for now.
