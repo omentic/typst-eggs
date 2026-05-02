@@ -38,15 +38,15 @@
 #align(center, text(size: 1.2em)[https://github.com/retroflexivity/typst-eggs])
 #v(5em)
 
-Eggs is a Typst package for typesetting linguistic examples. Its aim is to provide a Typst analogue to LaTeX `gb4e`, `expex`, `linguex`, etc. Additionally, it ships with Leipzig-style gloss abbreviations.
+Eggs is a Typst package for typesetting linguistic examples. Its aim is to provide a Typst analogue to LaTeX `gb4e`, `expex`, `linguex`, etc. Additionally, it ships with `leipzig`-style gloss abbreviations.
 
-This is the documentation for Eggs. It begins with a review of features, then discusses some useful tips & tricks, then finally provides an extensive list of functions and their arguments.
+This is a documentation on Eggs. It begins with a review of features, then discusses several tips and tricks, and closes with providing an extensive list of functions and their arguments.
 
 #pagebreak()
 
 = Initialization
 
-To use Eggs, first import it, and then initialize its configuration via a global show rule.
+To use Eggs, first import it, and then set its config via a global show rule.
 #footnote[
   This package follows Typst's tradition of not abbreviating function names too much. Naturally, to achieve more effortless (or TeX-like) experience, you can set some aliases on import, e.g.
 
@@ -82,11 +82,11 @@ The primary function of Eggs is `example`. It accepts any `content` and typesets
   ```
 )
 
-Examples are automatically numbered continuously, using a #link("https://typst.app/docs/reference/introspection/counter/")[counter]. To override automatic numbering, the `number` argument can be passed. Examples with a custom number do not increment the counter, so numbering continues where it was left off.
+Examples are automatically numbered continuously, using a #link("https://typst.app/docs/reference/introspection/counter/")[counter] called "eggsample". The counter's first level numbers examples, the second numbers subexamples. To override automatic numbering, pass the `number` argument to an example or subexample. Examples with a custom number do not increment the counter, so numbering continues where it was left off.
 #code-ex(
 
   ```typst
-  The idea of Predicate Inversion stems from the seeming parallelism of the following.
+  The idea of Predicate Inversion stems from the seeming parallelism of the following sentences.
   #example[
     `example` is the primary function of Eggs.
   ]
@@ -96,7 +96,7 @@ Examples are automatically numbered continuously, using a #link("https://typst.a
   ```
 )
 
-The counter can also be set to an absolute value with ```typst #counter("eggsample").update(n)``` or a relative one with ```typst #counter("eggsample").update(it => it + n)```. Within an example, the subexample counter can be set by using an array, as in ```typst #counter("eggsample").update((n, m)) ```. Following examples will be numbered starting with the next number.
+The counter can also be set to an absolute value with ```typst #counter("eggsample").update(n)``` or a relative one with ```typst #counter("eggsample").update(it => it + n)```. Within an example, the subexample counter can be set by passing a function that preserves the counter's first value, e.g. ```typst #counter("eggsample").update(it => (it.at(0), n)) ```. Following examples will be numbered starting with the next integer.
 
 By default, examples in each footnote are numbered separately. They also use their own formatting. The following footnote#footnote[
   Examples in footnotes use a separate counter, `fn-eggsample`, which is set to 0 at the beginning of each footnote.
@@ -116,7 +116,7 @@ By default, examples in each footnote are numbered separately. They also use the
 
 = Subexamples <subexamples>
 
-Numbered lists inside examples (lines that begin with `+`) are automatically typeset as subexamples.
+Numbered lists inside examples (lines that begin with `+ `) are automatically typeset as subexamples.
 
 #code-ex(
   ```typst
@@ -128,11 +128,9 @@ Numbered lists inside examples (lines that begin with `+`) are automatically typ
   ```
 )
 
-In case you prefer it manual, the function `subexample` is defined. It is intended to only be used inside `example`. The `subexample` form also can take a `number` argument for manual numbering.
+In case you prefer it manual, the function `subexample` is defined. It is intended to only be used inside an example. It behaves pretty similarly to `example` (e.g. accepts `number`).
 
-Automatic conversion of numbered lists can be toggled off by setting ```typst auto-subexamples: false``` in the config (see @customization).
-
-To suspend it for a single example, pass ```typst auto-subexamples: false``` to the example directly.
+Automatic conversion of numbered lists can be toggled off by setting ```typst auto-subexamples: false``` in the config (see @customization). To suspend it for a single example, pass ```typst auto-subexamples: false``` to the example directly.
 
 #counter("eggsample").update((..it) => it.at(0) - 1)
 #code-ex(
@@ -141,7 +139,6 @@ To suspend it for a single example, pass ```typst auto-subexamples: false``` to 
   #example(auto-subexamples: false)[
     #subexample[There is a/\*the subexample.]
     #subexample[Here is a/the subexample.]
-    + Now, numbered lists function as numbered lists.
   ]
   ```
 )
@@ -168,11 +165,11 @@ A simple and common use case is to align subexamples horizontally using a #link(
 
 = Glosses <glosses>
 
-Bullet lists in examples (lines that begin with `-`) are automatically treated as gloss lines.
+Bullet lists in examples (lines that begin with `- `) are automatically treated as gloss lines.
 
-For words to split, you need to ensure that there is Typst's special `space` element between them. A consistent way to do this is to *separate words with more than one space*. There are exceptions, particularly when function calls are involved, so use `~` (non-breaking space) for spaces you _don't_ want to be treated as separators.
+For words to split, you need to ensure that there is a `space` element between them. The easiest way to do it is to separate words with *more than one* space. There are exceptions with function calls, so use `~` (non-breaking space) for spaces you don't want to be treated as separators.
 
-Translations and preambles are written as lines below and above gloss environments, respectively.
+Translations and preambles are written as lines below and above the list, respectively.
 
 #code-ex(
   ```typst
@@ -186,9 +183,7 @@ Translations and preambles are written as lines below and above gloss environmen
   ```
 )
 
-Glosses can by typeset manually with `gloss`, which either accepts a `content` (which it splits automatically), or a list. Automatic bullet list conversion can be toggled off by setting ```typst auto-glosses: false``` in the config (see @customization).
-
-To suspend it for a single example, pass `auto-glosses: false` to the (sub)example directly.
+Glosses can by typeset manually with `gloss`. It accepts either a content, which it splits automatically, or a list. Automatic bullet list conversion can be toggled off by setting ```typst auto-glosses: false``` in the config (see @customization). To suspend it for a single example, pass `auto-glosses: false` to the (sub)example directly.
 
 #counter("eggsample").update(it => it - 1)
 #code-ex(
@@ -201,7 +196,6 @@ To suspend it for a single example, pass `auto-glosses: false` to the (sub)examp
       ([eggs], [this], [tasty]),
     )
     'Eggs are tasty.'
-    - Now, bullet lists function as bullet lists.
   ]
   ```
 )
@@ -231,7 +225,7 @@ Again, a function `judge` is provided to typeset judges manually. Following spac
   ```typst
   The following pair shows the information-structural rigidity of specificational sentences.
   #example(auto-judges: ())[
-    + #judge(super[OK]) SMITH is the killer.
+    + #judge(super[OK])SMITH is the killer.
     + #judge[\*]THE KILLER is Smith.
   ]
   ```
@@ -261,7 +255,6 @@ All abbreviations are in lowercase. All abbreviations' names are as they appear,
   ```
 )
 
-#pagebreak()
 Custom abbreviations can be created by defining a new `abbreviation`.
 
 #code-ex(
@@ -315,7 +308,9 @@ References to examples are automatically enclosed in parentheses. Citing two exa
   ```
 )
 
-A dedicated function, `ex-ref`, is also provided. It accepts references and additionally allows sending integers for relative numbering, with `0` referring to the last example, `1` to the next, etc; and supplementing content to appear in the parenthesis before and after example numbers.
+A dedicated function, `ex-ref`, is also provided. It accepts from 1 to 2 references, but also
+- integers for relative numbering, with `0` referring to the last example, `1` to the next, etc.
+- `left` and `right` positional arguments for content to appear in the parenthesis before and after example numbers.
 
 #code-ex(
   ```typst
@@ -334,7 +329,7 @@ A dedicated function, `ex-ref`, is also provided. It accepts references and addi
 
 Eggs offers some layout and styling customization and several behaviour options. The complete list is given in @funcs.
 
-The main way of customizing package options is by setting Eggs' parameters in a global show rule.
+There are several ways of customizing the package options. The primary one is passing arguments to `eggs` in a global show rule.
 
 #code-ex(
   ```typst
@@ -357,7 +352,7 @@ The main way of customizing package options is by setting Eggs' parameters in a 
   ```
 )
 
-To change Eggs' config only temporarily, you can scope the show rule or simply pass the configuration to `eggs` directly. Passed parameters are applied on top of the old configuration, so any parameters set earlier that are not overridden are preserved.
+To change Eggs' config temporarely, you can scope the show rule or simply pass some content to `eggs`. Passed parameters are applied on top of the old configuration, so any parameters set earlier that are not overriden are preserved.
 
 #counter("eggsample").update(it => it - 2)
 
@@ -396,19 +391,19 @@ To override the configuration for a single example, you can also pass the option
 
 Finally, since Eggs is powered by #link("https://typst.app/universe/package/elembic")[Elembic], you may apply #link("https://pgbiel.github.io/elembic/elements/styling/set-rules.html")[its set rules] to the elements `example`, `subexample`, and `gloss`. #link("https://pgbiel.github.io/elembic/elements/styling/show-rules.html")[Elembic's show rules] can also be used to style example contents in an arbitrary way.
 
-= Tips and Tricks
+= How-to's
 
 Eggs strives to stay simple, in the sense that it does not convolute the syntax with non-Typst constructs, and does not add marginal functionality that is easy to implement on one's own.
 
-Below is a list of tips that might be useful for typesetting, but are not part of Eggs itself.
+Below is a partly community-maintained list of tips that might be useful for typesetting examples, but are not part of Eggs' core functionality.
 
-#pagebreak()
-== Align arbitrary content between subexamples
+== Align content between subexamples
 
 Say you want to show ex. phonological processes, with arrows aligned. An easy way is to define a function that draws a single-line grid, then place it in every subexample.
 
 #code-ex(
   ```typst
+  // provide some default width for the left column
   #let phono-grid(ur, sr, ur-width: 4em) = grid(
     columns: (ur-width, auto, auto),
     gutter: 1em,
@@ -416,6 +411,7 @@ Say you want to show ex. phonological processes, with arrows aligned. An easy wa
   )
 
   #example[
+    // override the width if UR doesn't fit
     #let phono-grid = phono-grid.with(ur-width: 5em)
     + #phono-grid([/mi-te-iru/], [[miteiru]])
     + #phono-grid([/kiri-te-iru/], [[kitteiru]])
@@ -428,13 +424,18 @@ A more sophisticated function can include splitting the content automatically an
 #code-ex(
   ```typst
   #import "@preview/elembic:1.1.1" as e
+  // accept a list of subexamples
   #let phono-grid-wrapper(..args) = {
+    // get the first and the last children of every row, insert arrow in between
     let lines-split = args.pos().map(it => {
+      // get the elembic element's body
       let children = e.fields(it).body.children
       (children.at(0), $->$, children.at(-1))
     })
+    // align the first column by the widest UR
     let ur-width = calc.max(..lines-split.map(it => measure(it.at(0)).width))
     for line-split in lines-split {
+      // reassemble the subexample
       subexample(grid(
         columns: (ur-width, auto, auto),
         gutter: 1em,
@@ -450,147 +451,53 @@ A more sophisticated function can include splitting the content automatically an
   ```
 )
 
-#pagebreak()
-== Hide elements and/or pad words with spacing in glosses
+== Hide elements and pad under brackets in glosses
 
-When typesetting glosses, a common desire can be to put ex. brackets next to the following word with no tabulation between them, but align the other line with the _word_, not the bracket.
+When typesetting glosses, it's common that you need to put a bracket next to the following word with no tabulation between them, but align the other lines with the *word*, not the bracket.#footnote[`expex` uses `@` and `\nogloss` for this.]
 
-A clean way to accomplish this is to add hidden text with Typst's built-in #link("https://typst.app/docs/reference/layout/hide/")[hide]. This is similar to what LaTeX packages like `expex` accomplish with `\nogloss` and similar, except it must go on subsequent lines of the gloss, rather than the initial line.
+A clean way to do this is to add a hidden printed bracket with the built-in #link("https://typst.app/docs/reference/layout/hide/")[hide].
 
 #code-ex(
   ```typst
-  #let h = hide
-  #let i = text.with(style: "italic")
+    #let hb() = hide[\[]
+    #example[
+      - cet   exemple  a    [un      DP]
+      - this  example  has  #hb()a  DP
+    ]
+  ```
+)
+
+In other cases, you may want to skip a word in some gloss line that is present in others. `hide` is good, but a simple non-breaking space (`~`) also suffices.
+
+#code-ex(
+  ```typst
+    #example[
+      - où     est  passé  le   mot   _t_  aujourd’hui
+      - where  is   moved  the  word   ~   today
+    ]
+  ```
+)
+
+== Float attributions and other text right (by omentic)
+
+In linugistic examples, attributions are usually typeset on the same line, right-aligned. Put #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] with `1fr` (whole available width) before the attribution to right-align it.
+
+If the line is too long and the attribution doesn't fit, insert a linebreak before it.
+
+#code-ex(
+  ```typst
   #example[
-    - Fa'nu'i  yu'  ni      [[#i[O]    t#i[in]aitai-mu         #i[t]]    na  lepblu].
-    - show     me   Obl  #h[\[\[]Op    #i[WH];[obj].read-agr  #h[#i[t]]  L   book#h[\].]
+    + Jones is a Jones.#h(1fr) (Burge 1973)
+    + This entity called 'John J. Jones Jr.' is necessarily an entity called 'John J. Jones Jr.'.\ #h(1fr) (Burge 1973, adapted to make the line even longer)
   ]
   ```
 )
 
-The #link("https://typst.app/docs/reference/text/raw/")[raw text] and #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] functions can also be used for direct padding, when necessary.
+#nb[This method doesn't work in gloss lines.]
 
-#pagebreak()
-== Define aliases to prefixes/suffixes for compositional glossing
-
-Typst recognizes the `-` character as a valid _identifier_ in variable and function names: for example, `code-ex`.
-This makes it rather inconvenient to call zero-argument functions in glosses, as `-` is conventionally used by linguists for morpheme breaks.
-Every time a `-` follows a call to a function, it must be escaped with a `\`. This can lead to hard-to-read gloss code, if abbreviations are used.
-
-Alternatively, you can define _aliases_ to shared morphemes using Typst's functions.
-This has the advantage of also working with autocomplete in the web editor or with a language server.
-
-#code-ex(
-  ```typst
-  #import abbreviations: p3, an, dur, pl, pro
-  #let ai  = abbreviation("ai",  "animate intransitive")
-
-  #let ann    = [that]
-  #let iksi   = [-#p3#pl.#an]
-  #let ponoka = [elk]
-  #let a_dur  = [#dur\-]
-  #let otsi   = [swim.#ai]
-  #let yaawa  = [-#p3#pl=#pro]
-  #let ohkan  = [#smallcaps[all]-]
-
-  #example[
-    + - anníksi    ponokáíksi̥    áótsiyaaw̥ḁ.
-      - ann-iksi   ponoka-iksi   á-otsi-yi=aawa
-      - #ann#iksi  #ponoka#iksi  #a_dur#otsi#yaawa
-      'Those elk are swimming.' (elic. B > E)
-
-    + - anníksi    ponokáíksi̥    ótsiyaaw̥ḁ.
-      - ann-iksi   ponoka-iksi   ótsi-yi=aawa
-      - #ann#iksi  #ponoka#iksi  #otsi#yaawa
-      'Those elk swim.' (elic. B > E)
-  ]
-
-  #example[
-    + - anniksi    ponokáíksi̥    áóhkanotsiyaaw̥ḁ.
-      - ann-iksi   ponoka-iksi   á-ohkan-otsi-yi=aawa
-      - #ann#iksi  #ponoka#iksi  #a_dur#ohkan#otsi#yaawa
-      'Those elk are all swimming.'
-
-    + - \*anníksi  ponokáíksi̥  ohkanotsiyaaw̥ḁ.
-      Intended: 'Those elk all swim.'
-  ]
-  ```
-)
-
-#pagebreak()
-== Add line notes within example blocks with term lists
-
-As Eggs overrides auto-numbered lists (`+`) and bulleted lists (`-`) for use as subexamples and alignment environments, respectively, they are not available for use within the body of an `example` (without disabling `auto-subexamples` and `auto-glosses`). This can make it difficult to write down notes during and about elicitation sessions -- to have text notes broken onto multiple lines, lines either must end with `\`, or have an extra newline separating them.
-
-However, Eggs does not touch #link("https://typst.app/docs/reference/model/terms/")[term lists] -- lists of the form ```typst / term: description```. These are quite useful for jotting down notes -- particularly if the common convention of prefixing notes with the linguist/consultant's _initials_ is adopted.
-
-The exact style of term lists can also be modified for within `example` blocks by `show` rules.
-As Eggs is built on Elembic, this can be accomplished by putting `show` rules within a call to Elembic's `show_`:
-
-#code-ex(
-  ```typst
-  #import abbreviations: p3, an, dur, pl, pro
-  #let ai = abbreviation("ai",  "animate intransitive")
-
-  #import "@preview/elembic:1.1.1" as e
-  #show: e.show_(example, it => {
-    show terms: set terms(indent: 0em, hanging-indent: 0.5em, spacing: 0.5em,
-      separator: [: ])
-    show terms: set block(above: 1em)
-    show terms: set text(size: 0.95em)
-    show terms: set strong(delta: 0)
-    it
-  })
-
-  #example[
-    + - anníksi          ponokáíksi̥       #highlight[áótsiyaaw̥ḁ].
-      - ann-iksi         ponoka-iksi      á-otsi-yi=aawa
-      - that-#p3#pl.#an  elk\-#p3#pl.#an  #dur\-swim.#ai\-#p3#pl=#pro
-      'Those elk are swimming.' (elic. B > E)
-
-    + - anníksi          ponokáíksi̥       #highlight[ótsiyaaw̥ḁ].
-      - ann-iksi         ponoka-iksi      ótsi-yi=aawa
-      - that-#p3#pl.#an  elk\-#p3#pl.#an  swim.#ai\-#p3#pl=#pro
-      'Those elk swim.' (elic. B > E)
-
-      / EY: When you talk about swimming, _á-_ is like "being in the moment of"
-      / EY: The difference here between "swimming" vs. "swim"
-      / EY: 'Those elk swim' is a statement of fact... doesn't imply any particular time
-  ]
-  ```
-)
-
-#pagebreak()
-== Float attributions and other text right
-
-It can be desirable to attach _attributions_ to examples. Conventionally in glosses, these attributions take their place as right-aligned text, on the same line of the rest of the gloss.
-
-Typst's #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] function along with its #link("https://typst.app/docs/reference/layout/fraction/")[fractional type] makes this easy for short content.
-
-#code-ex(
-  ```typst
-  #import abbreviations: p3, an, dur, pl, pro
-  #let ai = abbreviation("ai",  "animate intransitive")
-  #example[
-    + - anníksi          ponokáíksi̥       #highlight[áótsiyaaw̥ḁ].
-      - ann-iksi         ponoka-iksi      á-otsi-yi=aawa
-      - that-#p3#pl.#an  elk\-#p3#pl.#an  #dur\-swim.#ai\-#p3#pl=#pro
-      'Those elk are swimming.' (elic. B > E) #h(1fr) via UBC's Field Methods II (2025w2)
-
-    + - anníksi          ponokáíksi̥       #highlight[ótsiyaaw̥ḁ].
-      - ann-iksi         ponoka-iksi      ótsi-yi=aawa
-      - that-#p3#pl.#an  elk\-#p3#pl.#an  swim.#ai\-#p3#pl=#pro
-      'Those elk swim.' (elic. B > E) #h(1fr) via UBC's Field Methods II (2025w2)
-  ]
-  ```
-)
-
-Note that this method only works on non-aligned gloss lines.
-
-#pagebreak()
 == Number examples by chapter
 
-The #link("https://typst.app/universe/package/headcount")[headcount] package provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
+Package #link("https://typst.app/universe/package/headcount")[headcount] provides graceful numbering dependent on current chapter. However, due to a #link("https://github.com/jbirnick/typst-headcount/issues/5")[bug], we need to tweak the definition of its `dependent-numbering` a bit.
 
 Unfortunately, using `ex-ref` (and smart refs) with headcount is currently broken with cross-chapter references. This will probably be fixed when the next release of Elembic is dropped. For now, use \@-refs with `smart-refs` off.
 
@@ -606,9 +513,7 @@ Unfortunately, using `ex-ref` (and smart refs) with headcount is currently broke
     #import "@preview/headcount:0.1.0": *
 
     // tweak the definition
-    #let dependent-numbering(style, levels: 1) = (..ns) => {
-      numbering(style, ..normalize-length(counter(heading).get(), levels), ..ns.pos())
-    }
+    #let dependent-numbering(style, levels: 1) = (..ns) => numbering(style, ..normalize-length(counter(heading).get(), levels), ..ns.pos())
 
     #show: eggs.with(
       smart-refs: false,
@@ -636,7 +541,60 @@ Unfortunately, using `ex-ref` (and smart refs) with headcount is currently broke
   counter(heading).update(heading-state)
 }
 
-#pagebreak()
+== Avoid escaping hyphens after abbreviations by defining a glossary (by omentic)
+
+Typst recognizes `-` as part of a variable name. This requires one to escape hyphens that marks morpheme boundaries, which might come annoying.
+
+It might be convenient to define _aliases_ for common morphemes. This has the advantage of also working with autocomplete if you import all abbreviations with an asterisk.
+
+#code-ex(
+  ```typst
+  #import abbreviations: p3, an, dur, pl, pro
+  #let ai  = abbreviation("ai",  "animate intransitive")
+
+  #let ann    = [that]
+  #let iksi   = [-#p3#pl.#an]
+  #let ponoka = [elk]
+  #let a_dur  = [#dur\-]
+  #let otsi   = [swim.#ai]
+  #let yaawa  = [-#p3#pl=#pro]
+  #let ohkan  = [#smallcaps[all]-]
+
+  #example[
+    + - ann-iksi   ponoka-iksi   á-otsi-yi=aawa
+      - #ann#iksi  #ponoka#iksi  #a_dur#otsi#yaawa
+      'Those elk are swimming.'
+
+    + - ann-iksi   ponoka-iksi   á-ohkan-otsi-yi=aawa
+      - #ann#iksi  #ponoka#iksi  #a_dur#ohkan#otsi#yaawa
+      'Those elk are all swimming.'
+  ]
+  ```
+)
+
+== Add line notes within examples with term lists (by omentic)
+
+Eggs overrides auto-numbered lists (`+`) and bulleted lists (`-`), so you can't use them to add quick list-like notes. However, #link("https://typst.app/docs/reference/model/terms/")[term lists] are untouched. These are particularly useful to typeset notes prefixed with the speaker's initials.
+
+#code-ex(
+  ```typst
+  #import "@preview/elembic:1.1.1" as e
+  // style term lists inside examples only, with elembic
+  #show: e.show_(example, it => {
+    // show the term and the description separated by a semicolon
+    show terms.item: it => [#it.term: #it.description\ ]
+    it
+  })
+
+  #example[
+    / EY: When you talk about swimming, _á-_ is like "being in the moment of"
+    / EY: The difference here between "swimming" vs. "swim"
+    / EY: 'Those elk swim' is a statement of fact... doesn't imply any particular time
+  ]
+  ```
+)
+
+
 = Complete function documentation <funcs>
 
 #set heading(numbering: none)
@@ -651,8 +609,6 @@ Unfortunately, using `ex-ref` (and smart refs) with headcount is currently broke
   it
 }
 #set list(spacing: 1.5em, marker: rotate(90deg, "🥚"))
-
-#show link: it => it.body
 
 #show regex("^[a-z\-.]+\s\((\w+(\s\|\s)?)+\)"): it => {
   set text(font: "DejaVu Sans Mono", size: 0.8em)
