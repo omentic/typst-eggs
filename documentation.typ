@@ -352,7 +352,7 @@ There are several ways of customizing the package options. The primary one is pa
   ```
 )
 
-To change Eggs' config temporarely, you can scope the show rule or simply pass some content to `eggs`. Passed parameters are applied on top of the old configuration, so any parameters set earlier that are not overriden are preserved.
+To change Eggs' config temporarily, you can scope the show rule or simply pass some content to `eggs`. Passed parameters are applied on top of the old configuration, so any parameters set earlier that are not overridden are preserved.
 
 #counter("eggsample").update(it => it - 2)
 
@@ -461,7 +461,7 @@ A clean way to do this is to add a hidden printed bracket with the built-in #lin
   ```typst
     #let hb() = hide[\[]
     #example[
-      - cet   exemple  a    [un      DP]
+      - cet   exemple  a    [un     DP]
       - this  example  has  #hb()a  DP
     ]
   ```
@@ -478,9 +478,9 @@ In other cases, you may want to skip a word in some gloss line that is present i
   ```
 )
 
-== Float attributions and other text right (by omentic)
+== Float attributions and other text right
 
-In linugistic examples, attributions are usually typeset on the same line, right-aligned. Put #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] with `1fr` (whole available width) before the attribution to right-align it.
+It can be desirable to attach _attributions_ to examples. Conventionally in linguistic examples, these attributions are typeset as right-aligned text on the same line as the rest of the gloss. Adding #link("https://typst.app/docs/reference/layout/fraction/")[`1fr`] of #link("https://typst.app/docs/reference/layout/h/")[horizontal spacing] (100% of the excess available width) before an attribution will right-align it.
 
 If the line is too long and the attribution doesn't fit, insert a linebreak before it.
 
@@ -493,7 +493,7 @@ If the line is too long and the attribution doesn't fit, insert a linebreak befo
   ```
 )
 
-#nb[This method doesn't work in gloss lines.]
+#nb[This method does not work on gloss lines.]
 
 == Number examples by chapter
 
@@ -541,11 +541,11 @@ Unfortunately, using `ex-ref` (and smart refs) with headcount is currently broke
   counter(heading).update(heading-state)
 }
 
-== Avoid escaping hyphens after abbreviations by defining a glossary (by omentic)
+== Avoid escaping hyphens after abbreviations by defining a glossary
 
-Typst recognizes `-` as part of a variable name. This requires one to escape hyphens that marks morpheme boundaries, which might come annoying.
+Typst recognizes hyphens (`-`) as part of a variable name. This requires one to escape hyphens that mark morpheme boundaries if they immediately follow a variable reference, which can be annoying.
 
-It might be convenient to define _aliases_ for common morphemes. This has the advantage of also working with autocomplete if you import all abbreviations with an asterisk.
+It can be convenient to instead define _aliases_ for common morphemes using Typst's variables, that include the hyphen marker directly. This also has the advantage of working well with autocomplete (in the web editor or through a language server) if you have a large inventory of lexical entries.
 
 #code-ex(
   ```typst
@@ -572,9 +572,11 @@ It might be convenient to define _aliases_ for common morphemes. This has the ad
   ```
 )
 
-== Add line notes within examples with term lists (by omentic)
+== Add line notes within examples with term lists
 
-Eggs overrides auto-numbered lists (`+`) and bulleted lists (`-`), so you can't use them to add quick list-like notes. However, #link("https://typst.app/docs/reference/model/terms/")[term lists] are untouched. These are particularly useful to typeset notes prefixed with the speaker's initials.
+Eggs overrides auto-numbered lists (`+`) and bulleted lists (`-`), so you can't use them to add notes in examples. However, #link("https://typst.app/docs/reference/model/terms/")[term lists] remain untouched. These are particularly useful in elicitations or collaborative contexts, when typesetting notes prefixed with the speaker's initials.
+
+The exact styling of term lists can also be modified using Elembic and Typst's show rules.
 
 #code-ex(
   ```typst
@@ -587,8 +589,9 @@ Eggs overrides auto-numbered lists (`+`) and bulleted lists (`-`), so you can't 
   })
 
   #example[
+    + - anníksi  ponokáíksi̥  #highlight[á]ótsiyaaw̥ḁ.
     / EY: When you talk about swimming, _á-_ is like "being in the moment of"
-    / EY: The difference here between "swimming" vs. "swim"
+    / EY: The difference here is between "swimming" vs. "swim"
     / EY: 'Those elk swim' is a statement of fact... doesn't imply any particular time
   ]
   ```
