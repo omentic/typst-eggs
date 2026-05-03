@@ -1,51 +1,6 @@
 #import "@preview/elembic:1.1.1" as e
 
-#import "utils.typ": auto-length, prefix, gen-get-function
-
-
-#let split-line(line, separator: [ ]) = {
-  if type(line) == array {
-    return line
-  }
-  assert(type(line) == content)
-  // one-word line
-  if "children" not in line.fields() {
-    return (line,)
-  }
-  line.children.split(separator).filter(it => it != ()).map([].func())
-}
-
-#let build-gloss-grid(lines, styles, word-spacing, line-spacing) = {
-  let len = lines.at(0).len()
-
-  for word-index in range(0, len) {
-    let words = lines.map(line => line.at(word-index))
-    let args = words.zip(styles).map(((word, style)) => style(word))
-    box(grid(row-gutter: line-spacing, ..args))
-    h(word-spacing)
-  }
-}
-
-#let build-gloss(elem) = {
-  let lines = elem.body.map(split-line)
-
-  // fill missing styles with defaults
-  let styles = elem.styles
-  if styles.len() < lines.len() {
-    styles += (x => x,) * (lines.len() - styles.len())
-  }
-
-  block(
-    above: (elem.get-before-spacing)(),
-    below: (elem.get-after-spacing)(),
-    build-gloss-grid(
-      lines,
-      styles,
-      elem.word-spacing,
-      (elem.get-line-spacing)(),
-    )
-  )
-}
+#import "utils.typ": auto-length, prefix, gen-get-function, split-line
 
 /// Interlinear gloss grid.
 ///
@@ -119,26 +74,41 @@
 
   // error traces do not go through context (https://github.com/PgBiel/elembic/issues/84),
   // so we must put all example/gloss validation in the constructor.
-  construct: default-constructor => (..args) => {
-    let lines = args.pos()
+  construct: constructor => (..args) => {
+    let lines = args.pos().map(split-line)
     // this seems to always be true.
     assert(lines.len() > 0, message: "at least one gloss line must be present")
 
     // guard against invalid line lengths
-    let gloss-message = "gloss lines have different lengths. are the glossed words separated by two or more spaces?"
-    if lines.at(0).has("children") {
-      let length = lines.at(0).children.len()
-      for line in lines {
-        assert(line.children.len() == length, message: gloss-message)
-      }
-    } else {
-      let length = 1
-      for line in lines {
-        assert(not line.has("children") or line.children.len() == length, message: gloss-message)
-      }
+    let length = lines.at(0).len()
+    for line in lines {
+      assert(line.len() == length, message: "gloss lines have different lengths. are the glossed words separated by two or more spaces?")
     }
 
-    default-constructor(..args)
+    constructor(..lines)
   },
-  display: build-gloss
+
+  display: elem => {
+    // fill missing styles with defaults
+    let styles = elem.styles
+    if styles.len() < elem.body.len() {
+      styles += (x => x,) * (elem.body.len() - styles.len())
+    }
+
+    let before-spacing = (elem.get-before-spacing)()
+    let after-spacing = (elem.get-after-spacing)()
+    let line-spacing = (elem.get-line-spacing)()
+    let word-spacing = elem.word-spacing
+    let length = elem.body.at(0).len()
+    block(
+      above: before-spacing,
+      below: after-spacing,
+      for word-index in range(0, length) {
+        let words = elem.body.map(line => line.at(word-index))
+        let args = words.zip(styles).map(((word, style)) => style(word))
+        box(grid(row-gutter: line-spacing, ..args))
+        h(word-spacing)
+      }
+    )
+  }
 )
