@@ -125,15 +125,16 @@
     assert(lines.len() > 0, message: "at least one gloss line must be present")
 
     // guard against invalid line lengths
+    let gloss-message = "gloss lines have different lengths. are the glossed words separated by two or more spaces?"
     if lines.at(0).has("children") {
       let length = lines.at(0).children.len()
       for line in lines {
-        assert(line.children.len() == length, message: "gloss lines have different lengths")
+        assert(line.children.len() == length, message: gloss-message)
       }
     } else {
       let length = 1
       for line in lines {
-        assert(not line.has("children") or line.children.len() == length, message: "gloss lines have different lengths")
+        assert(not line.has("children") or line.children.len() == length, message: gloss-message)
       }
     }
 
