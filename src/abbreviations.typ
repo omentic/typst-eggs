@@ -5,11 +5,19 @@
 #let used-abbreviations = state("used-abbreviations", (:))
 
 /// Prints the list of abbreviations used in the document
-/// as a term list. -> content
-#let print-abbreviations() = {
+/// as a term list.
+///
+/// - sorted-by (function): A callback function to sort abbreviations by.
+///   Takes in a left and a right abbreviation and returns a boolean.
+///   To sort by order of use, pass `(_, _) => true`.
+///
+///   *Default*: Alphabetical. `(l, r) => l <= r`
+///
+/// -> content
+#let print-abbreviations(sorted-by: (l, r) => l <= r) = {
   context {
     let used = used-abbreviations.final()
-    for (abbr, desc) in used {
+    for (abbr, desc) in used.pairs().sorted(key: k => k.at(0), by: sorted-by) {
       [/ #smallcaps(abbr): #desc]
     }
   }
