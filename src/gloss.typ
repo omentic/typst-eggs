@@ -26,23 +26,15 @@
   }
 }
 
-#let build-gloss(
-  elem
-) = {
-
+#let build-gloss(elem) = {
   let lines = elem.body.map(split-line)
-  assert(lines.len() > 0, message: "at least one gloss line must be present")
-
-  // guard against invalid line lengths
-  for line in lines {
-    assert(line.len() == lines.at(0).len(), message: "gloss lines have different lengths")
-  }
 
   // fill missing styles with defaults
   let styles = elem.styles
   if styles.len() < lines.len() {
     styles += (x => x,) * (lines.len() - styles.len())
   }
+
   block(
     above: (elem.get-before-spacing)(),
     below: (elem.get-after-spacing)(),
@@ -125,5 +117,27 @@
     ("after-spacing", par.leading)
   ),
 
+  // error traces do not go through context (https://github.com/PgBiel/elembic/issues/84),
+  // so we must put all example/gloss validation in the constructor.
+  construct: default-constructor => (..args) => {
+    let lines = args.pos()
+    // this seems to always be true.
+    assert(lines.len() > 0, message: "at least one gloss line must be present")
+
+    // guard against invalid line lengths
+    if lines.at(0).has("children") {
+      let length = lines.at(0).children.len()
+      for line in lines {
+        assert(line.children.len() == length, message: "gloss lines have different lengths")
+      }
+    } else {
+      let length = 1
+      for line in lines {
+        assert(not line.has("children") or line.children.len() == length, message: "gloss lines have different lengths")
+      }
+    }
+
+    default-constructor(..args)
+  },
   display: build-gloss
 )
