@@ -14,18 +14,18 @@
   it
 }
 
-#let prefix = "eggs07"
-
-#let split-line(line, separator: [ ]) = {
-  if type(line) == array {
-    return line
+#let split-content(it, separator: [ ]) = {
+  if type(it) == array {
+    return it
   }
-  assert(type(line) == content)
+  assert(type(it) == content)
 
   // one-word line
-  if not line.has("children") {
-    return (line,)
+  if not it.has("children") {
+    return (it,)
   }
 
-  line.children.split(separator).filter(it => it != ()).map([].func())
+  it.children.split(separator).filter(it => it != ()).map([].func())
 }
+
+#let prefix = "eggs07"
