@@ -102,17 +102,17 @@
     ("after-spacing", par.leading)
   ),
 
+  // split content lines into word arrays.
   // error traces do not go through context (https://github.com/PgBiel/elembic/issues/84),
-  // so we must put all example/gloss validation in the constructor.
+  // so we must do all the validation here
   construct: constructor => (..args) => {
     let lines = args.pos().map(split-line)
-    // this seems to always be true.
     assert(lines.len() > 0, message: "at least one gloss line must be present")
 
     // guard against invalid line lengths
     let length = lines.at(0).len()
     for line in lines {
-      assert(line.len() == length, message: "gloss lines have different lengths. are the glossed words separated by two or more spaces?")
+      assert(line.len() == length, message: "gloss lines have different lengths. make sure that\n- words are separated by two or more spaces\n- spaces around function calls and styled content that you don't want to split on are non-breakable (`~`)")
     }
 
     constructor(..lines, ..args.named())
