@@ -115,7 +115,7 @@
       assert(line.len() == length, message: "gloss lines have different lengths. are the glossed words separated by two or more spaces?")
     }
 
-    constructor(..lines)
+    constructor(..lines, ..args.named())
   },
 
   display: elem => {
