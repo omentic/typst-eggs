@@ -1,6 +1,6 @@
 #import "@preview/elembic:1.1.1" as e
 
-#import "utils.typ": auto-length, prefix, gen-get-function, split-line
+#import "utils.typ": auto-length, prefix, gen-get-function, split-content
 
 // take a martix of words
 // and assemble it into a gloss grid
@@ -106,7 +106,7 @@
   // error traces do not go through context (https://github.com/PgBiel/elembic/issues/84),
   // so we must do all the validation here
   construct: constructor => (..args) => {
-    let lines = args.pos().map(split-line)
+    let lines = args.pos().map(split-content)
     assert(lines.len() > 0, message: "at least one gloss line must be present")
 
     // guard against invalid line lengths
