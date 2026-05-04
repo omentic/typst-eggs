@@ -2,6 +2,36 @@
 
 #import "utils.typ": auto-length, prefix, gen-get-function, split-line
 
+// take a martix of words
+// and assemble it into a gloss grid
+#let build-gloss-grid(
+  lines,
+  styles: (),
+  before-spacing: auto,
+  after-spacing: auto,
+  line-spacing: auto,
+  word-spacing: auto,
+) = {
+  let length = lines.at(0).len()
+  block(
+    above: before-spacing,
+    below: after-spacing,
+
+    // turn list of lines into list of columns
+    lines.at(0).zip(..lines.slice(1))
+    .map(words => {
+      box(
+        grid(
+          row-gutter: line-spacing,
+          // apply corresponding styling to each word
+          ..words.zip(styles).map(((word, style)) => style(word))
+        )
+      )
+      h(word-spacing)
+    }).join()
+  )
+}
+
 /// Interlinear gloss grid.
 ///
 /// - body (content): Any number of rows of equal length. Rows can be either contents where elements are separated by more than one space or lists.
@@ -95,20 +125,13 @@
       styles += (x => x,) * (elem.body.len() - styles.len())
     }
 
-    let before-spacing = (elem.get-before-spacing)()
-    let after-spacing = (elem.get-after-spacing)()
-    let line-spacing = (elem.get-line-spacing)()
-    let word-spacing = elem.word-spacing
-    let length = elem.body.at(0).len()
-    block(
-      above: before-spacing,
-      below: after-spacing,
-      for word-index in range(0, length) {
-        let words = elem.body.map(line => line.at(word-index))
-        let args = words.zip(styles).map(((word, style)) => style(word))
-        box(grid(row-gutter: line-spacing, ..args))
-        h(word-spacing)
-      }
+    build-gloss-grid(
+      elem.body,
+      styles: styles,
+      before-spacing: (elem.get-before-spacing)(),
+      after-spacing: (elem.get-after-spacing)(),
+      line-spacing: (elem.get-line-spacing)(),
+      word-spacing: elem.word-spacing,
     )
   }
 )
