@@ -395,7 +395,7 @@ Finally, since Eggs is powered by #link("https://typst.app/universe/package/elem
 
 Eggs strives to stay simple, in the sense that it does not convolute the syntax with non-Typst constructs, and does not add marginal functionality that is easy to implement on one's own.
 
-Below is a partly community-maintained list of tips that might be useful for typesetting examples, but are not part of Eggs' core functionality.
+Below is a partly community-maintained#footnote[Feel free to suggest your own!] list of tips that might be useful for typesetting examples, but are not part of Eggs' core functionality.
 
 == Align content between subexamples
 
