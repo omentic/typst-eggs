@@ -32,7 +32,7 @@
 #v(6em)
 #align(center, par(spacing: 1.5em, text(size: 3em)[Eggs]))
 #align(center, text(size: 1.2em)[Linguistic examples with minimalist syntax])
-#align(center, text(size: 1em)[Version 0.7.0])
+#align(center, text(size: 1em)[Version 0.7.1])
 #v(1.5em)
 #align(center, text(size: 1.2em)[#datetime.today().display("[month repr:long] [year]")])
 #align(center, text(size: 1.2em)[https://github.com/retroflexivity/typst-eggs])
@@ -52,7 +52,7 @@ To use Eggs, first import it, and then set its config via a global show rule.
 
   #code-ex(
     ```typst
-    #import "@preview/eggs:0.7.0": example as ex, subexample as subex, judge as j, ex-label as el, ex-ref as er
+    #import "@preview/eggs:0.7.1": example as ex, subexample as subex, judge as j, ex-label as el, ex-ref as er
     ```,
     output: false
   )
@@ -60,7 +60,7 @@ To use Eggs, first import it, and then set its config via a global show rule.
 
 #code-ex(
   ```typst
-  #import "@preview/eggs:0.7.0"
+  #import "@preview/eggs:0.7.1"
   #show: eggs
   ```,
   output: false
