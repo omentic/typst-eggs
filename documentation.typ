@@ -1,4 +1,6 @@
 #set document(title: "typst eggs documentation")
+#let version = "0.7.1"
+
 #import "eggs.typ": abbreviations, example, gloss, judge, subexample, eggs, abbreviation, print-abbreviations, ex-label, ex-ref
 #import "@preview/tidy:0.4.3"
 
@@ -12,12 +14,17 @@
 
 #let code-ex(contents, output: true) = {
   set text(size: 0.9em)
+
+  let kwargs = contents.fields()
+  let text = kwargs.remove("text").replace("{version}", version)
+  let contents = raw(text, ..kwargs)
+
   block(stroke: 1pt + luma(140), inset: (left: 8pt, right: 8pt, top: 10pt, bottom: 12pt), width: 100%, breakable: false, radius: 5pt)[
     #contents
     #if output {[
       #line(length: 100%, stroke: 1pt + luma(140))
       #eval(
-        contents.text,
+        text,
         mode: "markup",
         scope: (eggs: eggs, example: example, gloss: gloss, subexample: subexample, judge: judge, abbreviations: abbreviations, abbreviation: abbreviation, print-abbreviations: print-abbreviations, ex-label: ex-label, ex-ref: ex-ref)
       )
@@ -32,7 +39,7 @@
 #v(6em)
 #align(center, par(spacing: 1.5em, text(size: 3em)[Eggs]))
 #align(center, text(size: 1.2em)[Linguistic examples with minimalist syntax])
-#align(center, text(size: 1em)[Version 0.7.1])
+#align(center, text(size: 1em)[Version #version])
 #v(1.5em)
 #align(center, text(size: 1.2em)[#datetime.today().display("[month repr:long] [year]")])
 #align(center, text(size: 1.2em)[https://github.com/retroflexivity/typst-eggs])
@@ -52,7 +59,7 @@ To use Eggs, first import it, and then set its config via a global show rule.
 
   #code-ex(
     ```typst
-    #import "@preview/eggs:0.7.1": example as ex, subexample as subex, judge as j, ex-label as el, ex-ref as er
+    #import "@preview/eggs:{version}": example as ex, subexample as subex, judge as j, ex-label as el, ex-ref as er
     ```,
     output: false
   )
@@ -60,7 +67,7 @@ To use Eggs, first import it, and then set its config via a global show rule.
 
 #code-ex(
   ```typst
-  #import "@preview/eggs:0.7.1"
+  #import "@preview/eggs:{version}"
   #show: eggs
   ```,
   output: false
