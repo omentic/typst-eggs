@@ -2,11 +2,11 @@
 name = "eggs"
 version = "0.7.1"
 entrypoint = "eggs.typ"
-authors = ["Arkady Shaldov <@retroflexivity>", "JJ <https://toki.la>", "other open-source contributors"]
+authors = "Arkady Shaldov"
 license = "MIT"
 description = "Linguistic examples with minimalist syntax"
 repository = "https://github.com/retroflexivity/typst-eggs"
 disciplines = ["linguistics"]
-categories = ["components", "visualization"]
+categories = ["components"]
 keywords = ["linguistics", "examples", "leipzig", "gloss", "glossing"]
 exclude = ["documentation.pdf", "assets"]
