@@ -14,18 +14,23 @@
   it
 }
 
-#let split-content(it, separator: [ ]) = {
+#let split-content(it) = {
   if type(it) == array {
     return it
   }
   assert(type(it) == content)
 
-  // one-word line
-  if not it.has("children") {
-    return (it,)
+  let replace-spaces-in-content(it) = {
+    if it.has("children") {
+      it.children.map(replace-spaces-in-content).flatten()
+    } else if it.has("text") {
+      it.text.split(" ").map(text).intersperse([ ])
+    } else {
+      (it,)
+    }
   }
 
-  it.children.split(separator).filter(it => it != ()).map([].func())
+  replace-spaces-in-content(it).split([ ]).filter(it => it != ()).map([].func())
 }
 
 #let prefix = "eggs07"

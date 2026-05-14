@@ -174,7 +174,9 @@ A simple and common use case is to align subexamples horizontally using a #link(
 
 Bullet lists in examples (lines that begin with `- `) are automatically treated as gloss lines.
 
-For words to split, you need to ensure that there is a `space` element between them. The easiest way to do it is to separate words with *more than one* space. There are exceptions with function calls, so use `~` (non-breaking space) for spaces you don't want to be treated as separators.
+For words to split, you need to ensure that there is at least one space between them. A notable exception occurs when dealing with _styled_ content: ```typst one _two three_ four``` is three words, while ```typst one #text[two three] four``` is four.
+
+A non-breaking space (`~`) can be used for spaces you don't want to be treated as separators.
 
 Translations and preambles are written as lines below and above the list, respectively.
 
