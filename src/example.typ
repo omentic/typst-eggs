@@ -367,7 +367,7 @@
     e.field("indent", length, default: 0em, doc: "Distance between the left margin and the left edge of the example number."),
     e.field("body-indent", length, default: 2.5em, doc: "Distance between the left edge of the example marker and the left edge of the example body."),
     e.field("spacing", auto-length, default: auto, doc: "Vertical spacing around the example. Currently, there is no way to modify spacing between two examples specifically."),
-    e.field("breakable", bool, default: false, doc: "Whether the example figure is breakable."),
+    e.field("breakable", bool, default: true, doc: "Whether the example figure is breakable."),
 
     e.field("num-pattern", e.types.union(str, function), default: "(1)", doc: "Example number format."),
     e.field("ref-pattern", e.types.union(str, function), default: "1a", doc: "Example reference format (without brackets). A 2-level numbering pattern."),
