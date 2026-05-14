@@ -1,7 +1,7 @@
 #set document(title: "typst eggs documentation")
 #let version = "0.7.1"
 
-#import "eggs.typ": abbreviations, example, gloss, judge, subexample, eggs, abbreviation, print-abbreviations, ex-label, ex-ref
+#import "eggs.typ": abbreviations, example, gloss, judge, subexample, eggs, abbreviation, print-abbreviations, print-abbreviations-inline, ex-label, ex-ref
 #import "@preview/tidy:0.4.3"
 
 #show: eggs
@@ -26,7 +26,7 @@
       #eval(
         text,
         mode: "markup",
-        scope: (eggs: eggs, example: example, gloss: gloss, subexample: subexample, judge: judge, abbreviations: abbreviations, abbreviation: abbreviation, print-abbreviations: print-abbreviations, ex-label: ex-label, ex-ref: ex-ref)
+        scope: (eggs: eggs, example: example, gloss: gloss, subexample: subexample, judge: judge, abbreviations: abbreviations, abbreviation: abbreviation, print-abbreviations: print-abbreviations, print-abbreviations-inline: print-abbreviations-inline, ex-label: ex-label, ex-ref: ex-ref)
       )
     ]}
   ]
@@ -277,11 +277,11 @@ Custom abbreviations can be created by defining a new `abbreviation`.
   ```
 )
 
-The list of currently used abbreviations is stored as a dictionary of the form `abbr: description` inside the `used-abbreviations` state. The final list of abbreviations can be accessed as #raw("#context state(\"used-abbreviations\").final()", lang: "typst"). There is also a function to print it as a #link("https://typst.app/docs/reference/model/terms/")[term~list].
+The list of currently used abbreviations is stored as a dictionary of the form `abbr: description` inside the `used-abbreviations` state. The final list of abbreviations can be accessed as #raw("#context state(\"used-abbreviations\").final()", lang: "typst"), or printed as a #link("https://typst.app/docs/reference/model/terms/")[term~list] via `print-abbreviations` or inline via `print-abbreviations-inline`.
 
 #code-ex(
   ```typst
-  The list of glossing abbreviations used in this paper:
+  The list of glossing abbreviations used in this paper are the following:
   #print-abbreviations()
   ```
 )

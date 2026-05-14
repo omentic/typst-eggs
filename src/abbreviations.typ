@@ -23,6 +23,22 @@
   }
 }
 
+/// Prints the list of abbreviations used in the document as an inline list.
+///
+/// - sorted-by (function): A callback function to sort abbreviations by.
+///   Takes in a left and a right abbreviation and returns a boolean.
+///   To sort by order of use, pass `(_, _) => true`.
+///
+///   *Default*: Alphabetical. `(l, r) => l <= r`
+///
+/// -> content
+#let print-abbreviations-inline(sorted-by: (l, r) => l <= r) = {
+  context {
+    let used = used-abbreviations.final()
+    used.pairs().sorted(key: k => k.at(0), by: sorted-by).map(((abbr, desc)) => [#smallcaps(abbr) = #desc]).join(", ")
+  }
+}
+
 /// Prints the symbol in smallcaps
 /// and adds it to the list of used abbreviations.
 ///

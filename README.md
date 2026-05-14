@@ -60,7 +60,7 @@ References are clever, bracketed and with support for two-example references via
 
 Common judges are recognized automatically. `judge` typesets text without taking up space.
 
-The `abbreviations` submodule provides `leipzig`-style abbreviation commands. They are kept track of and can be printed with `print-abbreviations`.
+The `abbreviations` submodule provides `leipzig`-style abbreviation commands. The abbreviations used are kept track of and can be printed with `print-abbreviations` or `print-abbreviations-inline`.
 
 Customization is done via the global show rule: `#show eggs.with()`.
 
